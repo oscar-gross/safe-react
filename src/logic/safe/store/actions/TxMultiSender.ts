@@ -40,7 +40,6 @@ export class TxMultiSender {
 
   async sendTx(): Promise<void> {
     const { transactions, multiSendCallData, multiSendContract, dispatch, account } = this
-
     try {
       await multiSendContract.methods
         .multiSend(multiSendCallData)
@@ -84,6 +83,5 @@ export class TxMultiSender {
 
 export const createMultiSendTransaction = (props: TxMultiSenderProps): Promise<void> => {
   const sender = new TxMultiSender(props)
-
   return sender.sendTx()
 }

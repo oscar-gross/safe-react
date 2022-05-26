@@ -84,7 +84,7 @@ export const chainsCW = {
       chainId: '2008',
       chainName: 'Testnet',
       shortName: 'brlc',
-      l2: true,
+      l2: false,
       description: '',
       rpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
@@ -153,15 +153,15 @@ export const chainsCW = {
       description: '',
       rpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/',
+        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
       } as RpcUri,
       safeAppsRpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/',
+        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
       } as RpcUri,
       publicRpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/',
+        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
       } as RpcUri,
       blockExplorerUriTemplate: {
         address: 'https://rinkeby.etherscan.io/address/{{address}}',
