@@ -11,7 +11,6 @@ import {
 } from 'src/logic/wallets/getWeb3'
 import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedException'
-
 export const EMPTY_DATA = '0x'
 
 export const DEFAULT_MAX_GAS_FEE = 0.0e9 // 0.0 GWEI
@@ -90,7 +89,8 @@ export const calculateGasPrice = async (): Promise<string> => {
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
     console.log(txConfig)
-    return 21000
+    return 500000
+    // return 258594
     // const ethAdapter = getSDKWeb3ReadOnly()
     // return await ethAdapter.estimateGas(txConfig)
   } catch (err) {
@@ -102,6 +102,12 @@ export const getUserNonce = async (userAddress: string): Promise<number> => {
   const web3 = getWeb3ReadOnly()
   try {
     return await web3.eth.getTransactionCount(userAddress, 'pending')
+    // const nonce = await providerAsync({
+    //   hash: userAddress,
+    //   tries: 1,
+    //   method: 'eth_getTransactionCount',
+    // }).then((res) => res).catch(e => e)
+    // return hexToNumber(nonce)
   } catch (error) {
     return Promise.reject(error)
   }

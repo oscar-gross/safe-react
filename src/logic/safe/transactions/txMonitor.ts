@@ -1,11 +1,10 @@
-import { Transaction, TransactionReceipt } from 'web3-core'
-
-import { getWeb3ReadOnly, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { Transaction, TransactionReceipt, Log, EventLog } from 'web3-core'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 import { CodedException, Errors } from 'src/logic/exceptions/CodedException'
-import { AbstractProvider } from 'web3-core/types'
 import { hexToNumber } from 'web3-utils'
+import { providerAsync } from '../utils/modules'
 
 type TxMonitorProps = {
   sender: string
@@ -15,41 +14,24 @@ type TxMonitorProps = {
   gasPrice?: string
 }
 
-type TxHash = {
+type TxReceipt = {
   blockHash: string
   blockNumber: string
-  chainId: string
-  creates: null
+  contractAddress?: string
+  cumulativeGasUsed: string
   from: string
-  gas: string
-  gasPrice: string
-  hash: string
-  input: string
-  nonce: string
-  publicKey: string
-  r: string
-  raw: string
-  s: string
-  standardV: string
+  gasUsed: string
+  status: string
   to: string
+  transactionHash: string
   transactionIndex: string
-  v: string
-  value: string
+  effectiveGasPrice?: string
+  logs: Log[]
+  logsBloom: string
+  events?: {
+    [eventName: string]: EventLog
+  }
 }
-// type TxReceipt = {
-//   blockHash: string | null,
-//   blockNumber: string | null,
-//   contractAddress: null,
-//   cumulativeGasUsed: string | null,
-//   from: string | null,
-//   gasUsed: string | null,
-//   logs: Array<any>,
-//   logsBloom: string | null,
-//   status: string | null,
-//   to: string | null,
-//   transactionHash: string | null,
-//   transactionIndex: string | null
-// }
 
 type TxMonitorOptions = {
   delay?: number
@@ -91,31 +73,12 @@ async function findSpeedupTx({ sender, hash, nonce, data }: TxMonitorProps): Pro
  * @returns {Promise<TransactionReceipt>}
  */
 
-const providerAsync = async ({ provider, hash, tries, method }): Promise<TxHash> => {
-  return new Promise(async (resolve, reject) => {
-    provider.sendAsync(
-      {
-        jsonrpc: '2.0',
-        method,
-        params: [hash],
-        id: String(tries),
-      },
-      (err, res: any) => {
-        if (err || res?.error) reject(null)
-        else resolve(res.result)
-      },
-    )
-  })
-}
-
 export const txMonitor = (
   { sender, hash, data, nonce, gasPrice }: TxMonitorProps,
   options?: TxMonitorOptions,
   tries = 0,
 ): Promise<TransactionReceipt> => {
-  const web3 = getWeb3ReadOnly()
-  const web3Test = getWeb3()
-  const provider = web3Test.currentProvider as AbstractProvider
+  // const web3 = getWeb3ReadOnly()
   return new Promise<TransactionReceipt>((resolve, reject) => {
     const { maxRetries = MAX_RETRIES } = options || {}
     if (tries > maxRetries) {
@@ -131,11 +94,12 @@ export const txMonitor = (
           // Find the nonce for the current tx
           // const transaction = await web3.eth.getTransaction(hash)
           const transaction = await providerAsync({
-            provider,
             hash,
             tries,
             method: 'eth_getTransactionByHash',
-          }).then((res) => res)
+          })
+            .then((res) => res)
+            .catch((e) => e)
 
           if (transaction) {
             params = {
@@ -147,7 +111,6 @@ export const txMonitor = (
         } catch (e) {
           // ignore error
         }
-
         return txMonitor(params, options, tries + 1)
           .then(resolve)
           .catch(reject)
@@ -155,13 +118,29 @@ export const txMonitor = (
 
       // Case 2: the nonce exists, try to get the receipt for the original tx
       try {
-        const firstTxReceipt = await web3.eth.getTransactionReceipt(hash)
-        // const firstTxReceipt = await providerAsync({
-        //   provider, hash, tries, method: 'eth_getTransactionReceipt'
-        // }).then(res => res)
+        // const firstTxReceipt = await web3.eth.getTransactionReceipt(hash)
+        const firstTxReceipt: TxReceipt = await providerAsync({
+          hash,
+          tries,
+          method: 'eth_getTransactionReceipt',
+        })
+          .then((res) => res)
+          .catch((e) => e)
 
         if (firstTxReceipt) {
-          return resolve(firstTxReceipt)
+          const firstTxReceiptParsed = Object.assign({
+            ...firstTxReceipt,
+            status: firstTxReceipt.status ? (hexToNumber(firstTxReceipt.status) === 1 ? true : false) : true,
+            blockNumber: hexToNumber(firstTxReceipt?.blockNumber),
+            cumulativeGasUsed: hexToNumber(firstTxReceipt?.cumulativeGasUsed),
+
+            gasUsed: hexToNumber(firstTxReceipt?.gasUsed),
+            transactionIndex: hexToNumber(firstTxReceipt?.transactionIndex),
+          })
+          firstTxReceipt?.effectiveGasPrice &&
+            Object.assign(firstTxReceiptParsed, { effectiveGasPrice: hexToNumber(firstTxReceipt?.effectiveGasPrice) })
+
+          return resolve(firstTxReceiptParsed)
         }
       } catch (e) {
         // proceed to case 3
@@ -172,11 +151,31 @@ export const txMonitor = (
         const replacementTx = await findSpeedupTx({ sender, hash, nonce, data })
 
         if (replacementTx) {
-          const replacementReceipt = await web3.eth.getTransactionReceipt(replacementTx.hash)
+          // const replacementReceipt = await web3.eth.getTransactionReceipt(replacementTx.hash)
+          const replacementReceipt: TxReceipt = await providerAsync({
+            hash: replacementTx.hash,
+            tries,
+            method: 'eth_getTransactionReceipt',
+          })
+            .then((res) => res)
+            .catch((e) => e)
 
           // goal achieved
           if (replacementReceipt) {
-            return resolve(replacementReceipt)
+            const replacementReceiptParsed = Object.assign({
+              ...replacementReceipt,
+              status: replacementReceipt.status ? (hexToNumber(replacementReceipt.status) === 1 ? true : false) : true,
+              blockNumber: hexToNumber(replacementReceipt?.blockNumber),
+              cumulativeGasUsed: hexToNumber(replacementReceipt?.cumulativeGasUsed),
+              gasUsed: hexToNumber(replacementReceipt?.gasUsed),
+              transactionIndex: hexToNumber(replacementReceipt?.transactionIndex),
+            })
+            replacementReceipt?.effectiveGasPrice &&
+              Object.assign(replacementReceiptParsed, {
+                effectiveGasPrice: hexToNumber(replacementReceipt?.effectiveGasPrice),
+              })
+
+            return resolve(replacementReceiptParsed)
           }
 
           // tx exists but no receipt yet, it's pending

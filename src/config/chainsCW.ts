@@ -84,7 +84,7 @@ export const chainsCW = {
       chainId: '2008',
       chainName: 'Testnet',
       shortName: 'brlc',
-      l2: true,
+      l2: false,
       description: '',
       rpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
