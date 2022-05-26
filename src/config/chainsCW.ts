@@ -153,15 +153,15 @@ export const chainsCW = {
       description: '',
       rpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
+        value: 'https://rinkeby.infura.io/v3/',
       } as RpcUri,
       safeAppsRpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
+        value: 'https://rinkeby.infura.io/v3/',
       } as RpcUri,
       publicRpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
+        value: 'https://rinkeby.infura.io/v3/',
       } as RpcUri,
       blockExplorerUriTemplate: {
         address: 'https://rinkeby.etherscan.io/address/{{address}}',
