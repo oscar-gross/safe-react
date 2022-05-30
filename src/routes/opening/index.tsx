@@ -11,7 +11,7 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
@@ -25,8 +25,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
 import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { providerAsync } from 'src/logic/safe/utils/modules'
-import { hexToNumber } from 'web3-utils'
+
 export const SafeDeployment = ({
   creationTxHash,
   onCancel,
@@ -143,32 +142,18 @@ export const SafeDeployment = ({
     }
 
     const isTxMined = async (txHash: string) => {
-      // const web3 = getWeb3ReadOnly()
-      // const txResult = await web3.eth.getTransaction(txHash)
-      const txResult = await providerAsync({
-        hash: txHash,
-        tries: 1,
-        method: 'eth_getTransactionByHash',
-      })
-        .then((res) => res)
-        .catch((e) => e)
+      const web3 = getWeb3ReadOnly()
 
+      const txResult = await web3.eth.getTransaction(txHash)
       if (txResult?.blockNumber == null) {
         return false
       }
-      // const receipt = await web3.eth.getTransactionReceipt(txHash)
-      const receipt = await providerAsync({
-        hash: safeCreationTxHash,
-        tries: 1,
-        method: 'eth_getTransactionReceipt',
-      })
-        .then((res) => res)
-        .catch((e) => e)
-      const status = receipt.status ? (hexToNumber(receipt.status) === 1 ? true : false) : true
 
-      if (!status) {
+      const receipt = await web3.eth.getTransactionReceipt(txHash)
+      if (!receipt?.status) {
         throw Error('TX status reverted')
       }
+
       return true
     }
 
@@ -176,6 +161,7 @@ export const SafeDeployment = ({
       if (stepIndex < 4) {
         setStepIndex(stepIndex + 1)
       }
+
       // safe created using the form
       if (submittedPromise !== undefined) {
         submittedPromise.then(() => {
@@ -184,6 +170,7 @@ export const SafeDeployment = ({
           setIntervalStarted(false)
         })
       }
+
       // safe pending creation recovered from storage
       if (creationTxHash !== undefined) {
         try {
@@ -202,21 +189,15 @@ export const SafeDeployment = ({
     return () => {
       clearInterval(interval)
     }
-  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error, onError, safeCreationTxHash])
+  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error, onError])
 
   useEffect(() => {
     let interval
+
     const awaitUntilSafeIsDeployed = async (safeCreationTxHash: string) => {
       try {
-        // const web3 = getWeb3ReadOnly()
-        // const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
-        const receipt = await providerAsync({
-          hash: safeCreationTxHash,
-          tries: 1,
-          method: 'eth_getTransactionReceipt',
-        })
-          .then((res) => res)
-          .catch((e) => e)
+        const web3 = getWeb3ReadOnly()
+        const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
         let safeAddress = ''
 
@@ -232,14 +213,7 @@ export const SafeDeployment = ({
         interval = setInterval(async () => {
           let code = EMPTY_DATA
           try {
-            // code = await web3.eth.getCode(safeAddress)
-            code = await providerAsync({
-              hash: safeAddress,
-              tries: 1,
-              method: 'eth_getCode',
-            })
-              .then((res) => res)
-              .catch((e) => e)
+            code = await web3.eth.getCode(safeAddress)
           } catch (err) {
             console.log(err)
           }
