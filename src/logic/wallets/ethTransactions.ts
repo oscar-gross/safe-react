@@ -11,10 +11,11 @@ import {
 } from 'src/logic/wallets/getWeb3'
 import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedException'
+
 export const EMPTY_DATA = '0x'
 
-export const DEFAULT_MAX_GAS_FEE = 0.0e9 // 0.0 GWEI
-export const DEFAULT_MAX_PRIO_FEE = 0.0e9 // 0.0 GWEI
+export const DEFAULT_MAX_GAS_FEE = 3.5e9 // 3.5 GWEI
+export const DEFAULT_MAX_PRIO_FEE = 2.5e9 // 2.5 GWEI
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
   const { uri, gasParameter, gweiFactor } = gasPriceOracle
@@ -52,12 +53,14 @@ export const getFeesPerGas = async (): Promise<{
   } catch (err) {
     logError(Errors._618, err.message)
   }
+
   if (!blocks || !maxPriorityFeePerGas || isNaN(maxPriorityFeePerGas) || !baseFeePerGas || isNaN(baseFeePerGas)) {
     return {
       maxFeePerGas: DEFAULT_MAX_GAS_FEE,
       maxPriorityFeePerGas: DEFAULT_MAX_PRIO_FEE,
     }
   }
+
   return {
     maxFeePerGas: baseFeePerGas + maxPriorityFeePerGas,
     maxPriorityFeePerGas,
@@ -66,6 +69,7 @@ export const getFeesPerGas = async (): Promise<{
 
 export const calculateGasPrice = async (): Promise<string> => {
   const gasPriceOracles = getGasPriceOracles()
+
   for (const gasPriceOracle of gasPriceOracles) {
     try {
       const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
@@ -90,7 +94,6 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
   try {
     console.log(txConfig)
     return 500000
-    // return 258594
     // const ethAdapter = getSDKWeb3ReadOnly()
     // return await ethAdapter.estimateGas(txConfig)
   } catch (err) {
@@ -102,12 +105,6 @@ export const getUserNonce = async (userAddress: string): Promise<number> => {
   const web3 = getWeb3ReadOnly()
   try {
     return await web3.eth.getTransactionCount(userAddress, 'pending')
-    // const nonce = await providerAsync({
-    //   hash: userAddress,
-    //   tries: 1,
-    //   method: 'eth_getTransactionCount',
-    // }).then((res) => res).catch(e => e)
-    // return hexToNumber(nonce)
   } catch (error) {
     return Promise.reject(error)
   }

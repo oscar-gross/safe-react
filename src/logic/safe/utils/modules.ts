@@ -1,13 +1,11 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { TransactionReceipt } from 'web3-core'
-import { AbstractProvider } from 'web3-core/types'
 
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getSafeSDK, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 
 /**
  * Builds a collection of tuples with (prev, module) module addresses
@@ -89,45 +87,4 @@ export const enableModuleTx = async ({
 
 export const isModuleEnabled = (modules: string[], moduleAddress: string): boolean => {
   return modules?.some((module) => sameAddress(module, moduleAddress)) ?? false
-}
-
-type TxHash = {
-  blockHash: string
-  blockNumber: string
-  chainId: string
-  creates: null
-  from: string
-  gas: string
-  gasPrice: string
-  hash: string
-  input: string
-  nonce: string
-  publicKey: string
-  r: string
-  raw: string
-  s: string
-  standardV: string
-  to: string
-  transactionIndex: string
-  v: string
-  value: string
-}
-
-export const providerAsync = async ({ hash, tries, method }): Promise<TxHash | TransactionReceipt> => {
-  const provider = getWeb3().currentProvider as AbstractProvider
-  const jsonrpc = Object.assign(
-    {
-      jsonrpc: '2.0',
-      method,
-      id: String(tries),
-    },
-    hash && { params: [hash] },
-  )
-
-  return new Promise(async (resolve, reject) => {
-    provider.sendAsync(jsonrpc, (err: any, res: any) => {
-      if (err || res?.error) reject(null)
-      else resolve(res.result)
-    })
-  })
 }

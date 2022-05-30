@@ -127,7 +127,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
       ethGasPriceInGWei: gasPrice,
       ethMaxPrioFeeInGWei: gasMaxPrioFee.toString(),
     })
-    // await confirmation on wallet
+    console.log('deploymentTx', deploymentTx)
     deploymentTx
       .send(sendParams)
       .once('transactionHash', (txHash) => {
@@ -148,6 +148,8 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
               reject(new Error('Sped-up tx reverted'))
               return
             }
+
+            console.log('Sped-up tx mined:', txReceipt)
             trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
             resolve(txReceipt)
           })
@@ -156,6 +158,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
           })
       })
       .then((txReceipt) => {
+        console.log('Original tx mined:', txReceipt)
         trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
         resolve(txReceipt)
       })

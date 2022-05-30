@@ -13,10 +13,10 @@ export const chainsCW = {
   previous: null,
   results: [
     {
-      transactionService: 'https://explorer.mainnet.cloudwalk.io/api-docs',
+      transactionService: 'https://safe-transaction.cloudwalkmainnet.gnosis.io',
       chainId: '2009',
-      chainName: 'Mainnet',
-      shortName: 'brlc',
+      chainName: 'CloudWalk Mainnet',
+      shortName: 'cloudWalk_mainnet',
       l2: false,
       description: '',
       rpcUri: {
@@ -37,8 +37,8 @@ export const chainsCW = {
         api: 'https://explorer.mainnet.cloudwalk.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}',
       } as BlockExplorerUriTemplate,
       nativeCurrency: {
-        name: 'Reais',
-        symbol: 'BRLC',
+        name: 'CloudWalk Native Token',
+        symbol: 'CWN',
         decimals: 18,
         logoUri: 'https://safe-transaction-assets.staging.gnosisdev.com/chains/1/currency_logo.png',
       } as NativeCurrency,
@@ -80,10 +80,10 @@ export const chainsCW = {
       ] as FEATURES[],
     },
     {
-      transactionService: 'https://explorer.testnet.cloudwalk.io/api-docs',
+      transactionService: 'https://safe-transaction.cloudwalktestnet.gnosis.io',
       chainId: '2008',
-      chainName: 'Testnet',
-      shortName: 'brlc',
+      chainName: 'CloudWalk Testnet',
+      shortName: 'cloudWalk_testnet',
       l2: false,
       description: '',
       rpcUri: {
@@ -104,8 +104,8 @@ export const chainsCW = {
         api: 'https://explorer.testnet.cloudwalk.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}',
       } as BlockExplorerUriTemplate,
       nativeCurrency: {
-        name: 'Reais',
-        symbol: 'BRLC',
+        name: 'CloudWalk Native Token',
+        symbol: 'CWN',
         decimals: 18,
         logoUri: 'https://safe-transaction-assets.staging.gnosisdev.com/chains/1/currency_logo.png',
       } as NativeCurrency,
@@ -145,7 +145,7 @@ export const chainsCW = {
       ] as FEATURES[],
     },
     {
-      transactionService: 'https://safe-transaction.rinkeby.staging.gnosisdev.com',
+      transactionService: 'https://safe-transaction.rinkeby.gnosis.io',
       chainId: '4',
       chainName: 'Rinkeby',
       shortName: 'rin',
@@ -153,15 +153,15 @@ export const chainsCW = {
       description: '',
       rpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/',
+        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
       } as RpcUri,
       safeAppsRpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/',
+        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
       } as RpcUri,
       publicRpcUri: {
         authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
-        value: 'https://rinkeby.infura.io/v3/',
+        value: 'https://rinkeby.infura.io/v3/53841f4528824284ad3a58f69811408b',
       } as RpcUri,
       blockExplorerUriTemplate: {
         address: 'https://rinkeby.etherscan.io/address/{{address}}',

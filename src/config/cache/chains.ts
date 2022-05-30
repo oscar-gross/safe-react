@@ -1,8 +1,10 @@
-import { ChainInfo, getChainsConfig, RPC_AUTHENTICATION } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  ChainInfo,
+  // getChainsConfig,
+  RPC_AUTHENTICATION,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import { setWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-// import { GATEWAY_URL } from 'src/utils/constants'
-// import {ChainInfo,RPC_AUTHENTICATION} from '../chains'
-import { chainsCW } from '../chainsCW'
+import { chainsCW } from '../chainCW'
 
 // Cache is required as loading Redux store directly is an anit-pattern
 let chains: ChainInfo[] = []
