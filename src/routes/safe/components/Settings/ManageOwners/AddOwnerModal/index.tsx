@@ -43,6 +43,8 @@ export const sendAddOwner = async (
     { ownerAddress: values.ownerAddress, threshold: +values.threshold },
     { safeTxGas: 0 },
   )
+  console.log('safeTx', safeTx)
+
   const txData = safeTx.data.data
 
   await dispatch(

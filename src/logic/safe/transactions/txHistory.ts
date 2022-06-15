@@ -86,5 +86,6 @@ export const saveTxToHistory = async ({
   })
   console.log('proposeTransaction', address, body)
   const txDetails = await proposeTransaction(_getChainId(), address, body)
+  console.log('proposeTransaction2', txDetails)
   return txDetails
 }
