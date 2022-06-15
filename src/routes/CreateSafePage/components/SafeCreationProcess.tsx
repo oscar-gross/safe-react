@@ -4,7 +4,7 @@ import { backOff } from 'exponential-backoff'
 import { TransactionReceipt } from 'web3-core'
 import { GenericModal } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
-import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'

@@ -4,7 +4,9 @@ import { Contract } from 'web3-eth-contract'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 import { namehash } from '@ethersproject/hash'
-import Safe from '@gnosis.pm/safe-core-sdk'
+// import Safe from '@gnosis.pm/safe-core-sdk'
+import Safe from '../core-sdk/Safe'
+
 import Web3Adapter from '@gnosis.pm/safe-web3-lib'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import memoize from 'lodash/memoize'
@@ -74,7 +76,6 @@ export const resetWeb3 = (): void => {
 }
 
 export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
-  console.log('getChainIdFrom', web3Provider)
   return web3Provider.eth.getChainId()
 }
 
@@ -89,9 +90,9 @@ export const isHardwareWallet = (wallet: Wallet): boolean => {
 
 export const isSmartContract = async (account: string, chainId: ChainId): Promise<boolean> => {
   let contractCode = ''
-  console.log('isSmartContract', account)
   try {
     contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
+    console.log('isSmartContract', account, contractCode)
   } catch (e) {
     console.log('e', e)
     // ignore
@@ -174,13 +175,9 @@ export const getSafeSDK = async (signerAddress: string, safeAddress: string, saf
     isL1SafeMasterCopy = networkId === CHAIN_ID.ETHEREUM
   }
 
-  console.log('getSafeSDK222', networkId, ethAdapter, safeAddress, isL1SafeMasterCopy)
-
-  const aaa = await Safe.create({
+  return await Safe.create({
     ethAdapter,
     safeAddress,
     isL1SafeMasterCopy,
   })
-  console.log('getSafeSDK', aaa, ethAdapter, safeAddress, isL1SafeMasterCopy, networkId)
-  return aaa
 }

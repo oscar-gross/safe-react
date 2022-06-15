@@ -152,6 +152,7 @@ export const TxModalWrapper = ({
   )
 
   const estimateGasLimit = useCallback(() => {
+    console.log('estimateGasLimit', txParameters)
     return estimateGasForTransactionExecution(txParameters)
   }, [txParameters])
 
