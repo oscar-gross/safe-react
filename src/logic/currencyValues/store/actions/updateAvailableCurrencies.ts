@@ -11,6 +11,8 @@ export const updateAvailableCurrencies =
   async (dispatch: ThunkDispatch<AppReduxState, undefined, Action<AvailableCurrenciesPayload>>): Promise<void> => {
     try {
       const availableCurrencies = await getFiatCurrencies()
+      availableCurrencies.push('BRLC')
+      availableCurrencies.push('CWN')
       dispatch(setAvailableCurrencies({ availableCurrencies }))
     } catch (err) {
       logError(Errors._607, err.message)

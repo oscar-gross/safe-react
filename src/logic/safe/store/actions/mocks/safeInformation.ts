@@ -1,4 +1,5 @@
-import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+// import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 import { CHAIN_ID } from 'src/config/chain.d'
 

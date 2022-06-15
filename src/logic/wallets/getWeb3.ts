@@ -74,6 +74,7 @@ export const resetWeb3 = (): void => {
 }
 
 export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
+  console.log('getChainIdFrom', web3Provider)
   return web3Provider.eth.getChainId()
 }
 
@@ -88,13 +89,13 @@ export const isHardwareWallet = (wallet: Wallet): boolean => {
 
 export const isSmartContract = async (account: string, chainId: ChainId): Promise<boolean> => {
   let contractCode = ''
+  console.log('isSmartContract', account)
   try {
     contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
   } catch (e) {
     console.log('e', e)
     // ignore
   }
-
   return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
@@ -166,7 +167,6 @@ export const getSDKWeb3ReadOnly = (): Web3Adapter => {
 export const getSafeSDK = async (signerAddress: string, safeAddress: string, safeVersion: string): Promise<Safe> => {
   const networkId = (await getChainIdFrom(web3)).toString() as ChainId
   const ethAdapter = getSDKWeb3Adapter(signerAddress)
-
   let isL1SafeMasterCopy: boolean
   if (semverSatisfies(safeVersion, '<1.3.0')) {
     isL1SafeMasterCopy = true
@@ -174,9 +174,13 @@ export const getSafeSDK = async (signerAddress: string, safeAddress: string, saf
     isL1SafeMasterCopy = networkId === CHAIN_ID.ETHEREUM
   }
 
-  return await Safe.create({
+  console.log('getSafeSDK222', networkId, ethAdapter, safeAddress, isL1SafeMasterCopy)
+
+  const aaa = await Safe.create({
     ethAdapter,
     safeAddress,
     isL1SafeMasterCopy,
   })
+  console.log('getSafeSDK', aaa, ethAdapter, safeAddress, isL1SafeMasterCopy, networkId)
+  return aaa
 }

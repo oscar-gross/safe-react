@@ -4,6 +4,8 @@ import {
   SafeTransactionEstimation,
   Operation,
 } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getInstance } from 'src/logic/contracts/safeContracts'
 
 import { _getChainId } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -16,7 +18,19 @@ export const fetchSafeTxGasEstimation = async ({
   safeAddress,
   ...body
 }: FetchSafeTxGasEstimationProps): Promise<SafeTransactionEstimation> => {
-  return postSafeGasEstimation(_getChainId(), checksumAddress(safeAddress), body)
+  const chainId = _getChainId()
+  console.log('fetchSafeTxGasEstimation', body)
+  if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
+    return await postSafeGasEstimation(_getChainId(), checksumAddress(safeAddress), body)
+  const web3 = getWeb3()
+  const instance = await getInstance(web3, chainId, safeAddress)
+  const nonce = await instance.methods.nonce().call()
+
+  return {
+    currentNonce: parseInt(nonce),
+    recommendedNonce: parseInt(nonce) + 1,
+    safeTxGas: '500000',
+  }
 }
 
 export const getRecommendedNonce = async (safeAddress: string): Promise<number> => {

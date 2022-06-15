@@ -60,14 +60,19 @@ function LoadSafeAddressStep(): ReactElement {
 
   useEffect(() => {
     const checkSafeAddress = async () => {
+      console.log('safeAddress1', safeAddress)
+
       const isValidSafeAddress = isValidAddress(safeAddress) && isChecksumAddress(safeAddress)
       if (!isValidSafeAddress) {
         return
       }
+      console.log('safeAddress2', safeAddress)
 
       setIsSafeInfoLoading(true)
       try {
         const { owners, threshold } = await getSafeInfo(safeAddress)
+        console.log('safeAddress3', safeAddress)
+
         setIsSafeInfoLoading(false)
         const ownersWithName = owners.map(({ value: address }) => {
           return makeAddressBookEntry(addressBook[address] || { address, name: '', chainId })
@@ -92,6 +97,7 @@ function LoadSafeAddressStep(): ReactElement {
         setThreshold(threshold)
         setIsValidSafeAddress(true)
       } catch (error) {
+        console.log('safeAddressError', error)
         setOwnersWithName([])
         setThreshold(undefined)
         setIsValidSafeAddress(false)

@@ -12,7 +12,6 @@ const cache = {}
 export const fetchSafeTransaction = async (txId: string): Promise<TransactionDetails> => {
   const chainId = _getChainId()
   const cacheKey = `${chainId}_${txId}`
-
   const promise: Promise<TransactionDetails> = cache[cacheKey] || getTransactionDetails(chainId, txId)
 
   // Save the promise into cache
@@ -20,6 +19,6 @@ export const fetchSafeTransaction = async (txId: string): Promise<TransactionDet
 
   // Clear cache when promise finishes
   promise.catch(() => null).then(() => delete cache[cacheKey])
-
+  console.log('fetchSafeTransaction', promise, txId)
   return promise
 }

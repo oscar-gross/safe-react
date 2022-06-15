@@ -25,7 +25,16 @@ export const loadPagedHistoryTransactions = async (
   }
 
   try {
-    const { results, next, previous } = await getTransactionHistory(
+    const aa = await getTransactionHistory(
+      chainId,
+      checksumAddress(safeAddress),
+      historyPointers[chainId][safeAddress].next,
+    )
+    const { results, next, previous } = aa
+
+    console.log(
+      'getTransactionHistory',
+      aa,
       chainId,
       checksumAddress(safeAddress),
       historyPointers[chainId][safeAddress].next,
@@ -41,8 +50,47 @@ export const loadPagedHistoryTransactions = async (
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
   const chainId = _getChainId()
+  let res
   try {
-    const { results, next, previous } = await getTransactionHistory(chainId, checksumAddress(safeAddress))
+    // https://safe-client.gnosis.io/v1/chains/4/safes/0x351c79Ee22710933A3c8229B5A42F8423A2083B3/transactions/history
+    if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
+      res = await getTransactionHistory(chainId, checksumAddress(safeAddress))
+    else
+      res = {
+        next: null,
+        previous: null,
+        results: [
+          {
+            type: 'DATE_LABEL',
+            timestamp: 1653436800000,
+          },
+          {
+            type: 'TRANSACTION',
+            transaction: {
+              id: 'creation_0xa21c4C3F18f16AFB938760fcAc7b43B696333376',
+              timestamp: 1653511108000,
+              txStatus: 'SUCCESS',
+              txInfo: {
+                type: 'Creation',
+                creator: {
+                  value: '0x32Bc07182D7D797C54873219F3F80e0084c606c4',
+                },
+                transactionHash: '0x11d190dd40432040b1ae97929bf2f37d383b5cd2ff10318d8dee48341959588d',
+                implementation: {
+                  value: '0x9c5ba02C7CCd1F11346E43785202711cE1DCc130',
+                },
+                factory: {
+                  value: '0x23cCC7463468e3C56A4CE37Afab577EB3dd0e3CB',
+                },
+              },
+            },
+            conflictType: 'None',
+          },
+        ],
+      }
+
+    const { results, next, previous } = res
+    console.log('getTransactionHistory2', res)
 
     if (!historyPointers[chainId]) {
       historyPointers[chainId] = {}
@@ -79,10 +127,19 @@ export const loadPagedQueuedTransactions = async (
   }
 
   try {
-    const { results, next, previous } = await getTransactionQueue(
+    const aa = await getTransactionQueue(
       chainId,
       checksumAddress(safeAddress),
       queuedPointers[chainId][safeAddress].next,
+    )
+    const { results, next, previous } = aa
+
+    console.log(
+      'getTransactionQueue',
+      aa,
+      chainId,
+      checksumAddress(safeAddress),
+      historyPointers[chainId][safeAddress].next,
     )
 
     queuedPointers[chainId][safeAddress] = { next, previous }
@@ -95,9 +152,13 @@ export const loadPagedQueuedTransactions = async (
 
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
   const chainId = _getChainId()
+  let res
   try {
-    const { results, next, previous } = await getTransactionQueue(chainId, checksumAddress(safeAddress))
-
+    if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
+      res = await getTransactionQueue(chainId, checksumAddress(safeAddress))
+    else res = { results: [], next: null, previous: null }
+    const { results, next, previous } = res
+    console.log('getTransactionQueue2', res)
     if (!queuedPointers[chainId]) {
       queuedPointers[chainId] = {}
     }
