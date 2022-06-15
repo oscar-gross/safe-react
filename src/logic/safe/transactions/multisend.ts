@@ -31,6 +31,6 @@ export const getMultiSendJoinedTxs = (txs: Transaction[]): string => {
       ].join(''),
     )
     .join('')
-
+  console.log('joinedTxs', joinedTxs)
   return `0x${joinedTxs}`
 }

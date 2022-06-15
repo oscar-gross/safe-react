@@ -214,6 +214,8 @@ function SafeCreationProcess(): ReactElement {
   }, [userAddress])
 
   const onSafeCreated = async (safeAddress: string): Promise<void> => {
+    console.log('onSafeCreated', safeAddress)
+
     const createSafeFormValues = loadSavedDataOrLeave()
 
     const defaultSafeValue = createSafeFormValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]

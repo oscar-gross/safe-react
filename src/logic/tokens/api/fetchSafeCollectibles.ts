@@ -3,5 +3,8 @@ import { _getChainId } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const fetchSafeCollectibles = async (safeAddress: string): Promise<SafeCollectibleResponse[]> => {
-  return getCollectibles(_getChainId(), checksumAddress(safeAddress))
+  const chainId = _getChainId()
+  if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
+    return await getCollectibles(chainId, checksumAddress(safeAddress))
+  return []
 }

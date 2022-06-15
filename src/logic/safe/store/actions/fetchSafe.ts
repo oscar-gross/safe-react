@@ -5,7 +5,9 @@ import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+// import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
+
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
 import { AppReduxState, store } from 'src/store'
@@ -35,7 +37,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
     err.log()
     return null
   })
-
+  console.log('remote', remote)
   // remote (client-gateway)
   const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}
   // local

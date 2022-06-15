@@ -29,7 +29,30 @@ const extractMasterCopyInfo = (mc: MasterCopyReponse[number]): MasterCopy => {
 
 export const fetchMasterCopies = async (): Promise<MasterCopy[] | undefined> => {
   try {
-    const res = await getMasterCopies(_getChainId())
+    const chainId = _getChainId()
+    let res: MasterCopyReponse
+    if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009) res = await getMasterCopies(chainId)
+
+    res = [
+      {
+        address: '0xB14A20768097784cE478e9304F58873f84F6F451',
+        version: '1.3.0+L2',
+      },
+      {
+        address: '0x9c5ba02C7CCd1F11346E43785202711cE1DCc130',
+        version: '1.2.0',
+      },
+      {
+        address: '0x9c5ba02C7CCd1F11346E43785202711cE1DCc130',
+        version: '1.3.0',
+      },
+      {
+        address: '0x9c5ba02C7CCd1F11346E43785202711cE1DCc130',
+        version: '1.1.1',
+      },
+    ]
+    console.log('getMasterCopies', res)
+
     return res.map(extractMasterCopyInfo)
   } catch (error) {
     console.error('Fetching data from master-copies errored', error)

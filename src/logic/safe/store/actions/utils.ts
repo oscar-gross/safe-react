@@ -1,5 +1,9 @@
 import { generatePath } from 'react-router-dom'
-import { SafeInfo, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  // SafeInfo,
+  TransactionDetails,
+} from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
@@ -99,7 +103,6 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.txQueuedTag = remoteSafeInfo.txQueuedTag
   safeInfo.txHistoryTag = remoteSafeInfo.txHistoryTag
   safeInfo.chainId = remoteSafeInfo.chainId as ChainId
-
   return safeInfo
 }
 

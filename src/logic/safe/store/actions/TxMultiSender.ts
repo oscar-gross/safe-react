@@ -40,7 +40,7 @@ export class TxMultiSender {
 
   async sendTx(): Promise<void> {
     const { transactions, multiSendCallData, multiSendContract, dispatch, account } = this
-
+    console.log('sendTx1', transactions, multiSendCallData, multiSendContract, account)
     try {
       await multiSendContract.methods
         .multiSend(multiSendCallData)
@@ -48,9 +48,13 @@ export class TxMultiSender {
           from: account,
         })
         .on('transactionHash', (txHash) => {
+          console.log('sendTx2', txHash)
+
           transactions.forEach((tx) => {
             const txNonce = isMultisigExecutionInfo(tx.executionInfo) ? tx.executionInfo.nonce : undefined
             txNonce && aboutToExecuteTx.setNonce(txNonce)
+            console.log('sendTx3', txNonce)
+
             dispatch(addPendingTransaction({ id: tx.id, txHash }))
             this.onComplete()
           })

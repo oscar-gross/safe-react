@@ -16,7 +16,7 @@ export const chainsCW = {
       transactionService: 'https://safe-transaction.cloudwalkmainnet.gnosis.io',
       chainId: '2009',
       chainName: 'CloudWalk Mainnet',
-      shortName: 'cloudWalk_mainnet',
+      shortName: 'cwm',
       l2: false,
       description: '',
       rpcUri: {
@@ -83,7 +83,7 @@ export const chainsCW = {
       transactionService: 'https://safe-transaction.cloudwalktestnet.gnosis.io',
       chainId: '2008',
       chainName: 'CloudWalk Testnet',
-      shortName: 'cloudWalk_testnet',
+      shortName: 'cwn',
       l2: false,
       description: '',
       rpcUri: {
