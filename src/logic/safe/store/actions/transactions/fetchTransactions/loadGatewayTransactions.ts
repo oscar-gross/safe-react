@@ -3,7 +3,7 @@ import { _getChainId } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
-
+import { TransactionListItem } from '@gnosis.pm/safe-react-gateway-sdk'
 /*************/
 /*  HISTORY  */
 /*************/
@@ -31,15 +31,6 @@ export const loadPagedHistoryTransactions = async (
       historyPointers[chainId][safeAddress].next,
     )
     const { results, next, previous } = aa
-
-    console.log(
-      'getTransactionHistory',
-      aa,
-      chainId,
-      checksumAddress(safeAddress),
-      historyPointers[chainId][safeAddress].next,
-    )
-
     historyPointers[chainId][safeAddress] = { next, previous }
 
     return { values: results, next: historyPointers[chainId][safeAddress].next }
@@ -90,7 +81,6 @@ export const loadHistoryTransactions = async (safeAddress: string): Promise<Hist
       }
 
     const { results, next, previous } = res
-    console.log('getTransactionHistory2', res)
 
     if (!historyPointers[chainId]) {
       historyPointers[chainId] = {}
@@ -133,15 +123,6 @@ export const loadPagedQueuedTransactions = async (
       queuedPointers[chainId][safeAddress].next,
     )
     const { results, next, previous } = aa
-
-    console.log(
-      'getTransactionQueue',
-      aa,
-      chainId,
-      checksumAddress(safeAddress),
-      historyPointers[chainId][safeAddress].next,
-    )
-
     queuedPointers[chainId][safeAddress] = { next, previous }
 
     return { values: results, next: queuedPointers[chainId][safeAddress].next }
@@ -153,12 +134,29 @@ export const loadPagedQueuedTransactions = async (
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
   const chainId = _getChainId()
   let res
+  //  if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
+  //     res = await getTransactionQueue(chainId, checksumAddress(safeAddress))
+  //   else {
+  //     let results: Array<Object> = [{ type: 'LABEL', label: 'Next' }]
+  //     // results.push(data)
+  //     res = { next: null, previous: null, results }
+  //   }
   try {
     if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
       res = await getTransactionQueue(chainId, checksumAddress(safeAddress))
-    else res = { results: [], next: null, previous: null }
+    else {
+      const results = localStorage.getItem(`loadQueue${chainId}`)
+        ? (JSON.parse(localStorage.getItem(`loadQueue${chainId}`) as string) as TransactionListItem[])
+        : ([] as TransactionListItem[])
+
+      res = {
+        next: 'null',
+        previous: 'null',
+        results,
+      }
+    }
+
     const { results, next, previous } = res
-    console.log('getTransactionQueue2', res)
     if (!queuedPointers[chainId]) {
       queuedPointers[chainId] = {}
     }
@@ -167,7 +165,7 @@ export const loadQueuedTransactions = async (safeAddress: string): Promise<Queue
       queuedPointers[chainId][safeAddress] = { next, previous }
     }
 
-    return results
+    return results as TransactionListItem[]
   } catch (e) {
     throw new CodedException(Errors._603, e.message)
   }

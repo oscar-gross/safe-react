@@ -1,11 +1,14 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { Fragment, ReactElement, useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
-
+import { Button, Tooltip } from '@gnosis.pm/safe-react-components'
+import Row from 'src/components/layout/Row'
+import { useStyles } from './SearchQueueModal/style'
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { sameString } from 'src/utils/strings'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
-
+import styled from 'styled-components'
+import { md, sm } from 'src/theme/variables'
 import {
   DisclaimerContainer,
   GroupedTransactions,
@@ -21,6 +24,7 @@ import { TxQueueRow } from './TxQueueRow'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxActionProvider } from './TxActionProvider'
 import { ActionModal } from './ActionModal'
+import { SearchQueueModal } from './SearchQueueModal'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
@@ -94,7 +98,6 @@ type QueueTxListProps = {
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const nonce = useSelector(currentSafeNonce)
-
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
   if (transactions.length) {
     const [, lastTransactionsGroup] = transactions[transactions.length - 1]
@@ -115,6 +118,7 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
       <StyledTransactionsGroup>
         <SubTitle size="lg">{title}</SubTitle>
         <StyledTransactions>
+          <ButtonOpenModalSearch />
           {transactions.map(([nonce, txs]) => (
             <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
           ))}
@@ -124,3 +128,32 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
     </TxActionProvider>
   )
 }
+
+const ButtonOpenModalSearch = (): ReactElement => {
+  const classes = useStyles()
+  const [modalsStatus, setModalStatus] = useState(false)
+  return (
+    <>
+      <Row align="end" className={classes.buttonRow} grow>
+        <ButtonWrapper>
+          <Tooltip title={'Search pending transactions'} placement="top">
+            <div>
+              <Button size="md" color="primary" centerRipple onClick={() => setModalStatus(true)} className="primary">
+                {'Search pending transactions'}
+              </Button>
+            </div>
+          </Tooltip>
+        </ButtonWrapper>
+      </Row>
+      <SearchQueueModal isOpen={modalsStatus} onClose={() => setModalStatus(false)} />
+    </>
+  )
+}
+
+const ButtonWrapper = styled.span`
+  align-self: flex-end;
+  margin-right: ${sm};
+  margin-top: -51px;
+  margin-bottom: ${md};
+  z-index: 0;
+`

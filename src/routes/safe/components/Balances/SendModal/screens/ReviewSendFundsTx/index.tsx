@@ -166,6 +166,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           delayExecution,
+          values: {
+            method: 'OUTGOING',
+            type: 'Transfer',
+          },
         }),
       )
       onClose()

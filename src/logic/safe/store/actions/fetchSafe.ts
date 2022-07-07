@@ -37,7 +37,6 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
     err.log()
     return null
   })
-  console.log('remote', remote)
   // remote (client-gateway)
   const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}
   // local

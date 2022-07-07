@@ -50,10 +50,5 @@ export const fetchTokenCurrenciesBalances = async ({
       },
     ],
   }
-
-  // console.log('getBalances', result, address, selectedCurrency, {
-  //   exclude_spam: excludeSpamTokens,
-  //   trusted: trustedTokens,
-  // })
   return result
 }

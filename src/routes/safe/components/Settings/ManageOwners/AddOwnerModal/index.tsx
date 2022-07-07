@@ -43,8 +43,6 @@ export const sendAddOwner = async (
     { ownerAddress: values.ownerAddress, threshold: +values.threshold },
     { safeTxGas: 0 },
   )
-  console.log('safeTx', safeTx)
-
   const txData = safeTx.data.data
 
   await dispatch(
@@ -58,6 +56,12 @@ export const sendAddOwner = async (
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       delayExecution,
+      values: {
+        ownerAdded: values.ownerAddress,
+        newThreshold: values.threshold,
+        method: 'addOwnerWithThreshold',
+        type: 'ADD_OWNER',
+      },
     }),
   )
 

@@ -49,6 +49,7 @@ export interface CreateTransactionArgs {
   safeTxGas?: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
   delayExecution?: boolean
+  values?: Record<string, unknown>
 }
 
 type RequiredTxProps = CreateTransactionArgs &
@@ -58,7 +59,7 @@ type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
-const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
+export const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
   const estimationProps: SafeTxGasEstimationProps = {
     safeAddress: txProps.safeAddress,
     txData: txProps.txData,
@@ -95,14 +96,13 @@ export class TxSender {
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
     const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization } = this
-
     // Propose the tx to the backend
     // 1) If signing
     // 2) If creating a new tx (no txId yet)
     let txDetails: TransactionDetails | null = null
     if (!isFinalization || !this.txId) {
       try {
-        txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin })
+        txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin, values: txProps.values })
         this.txId = txDetails.txId
       } catch (err) {
         logError(Errors._816, err.message)
@@ -201,7 +201,6 @@ export class TxSender {
 
     await tx.send(sendParams).once('transactionHash', (hash) => {
       this.txHash = hash
-
       if (isFinalization) {
         aboutToExecuteTx.setNonce(txArgs.nonce)
       }
@@ -226,7 +225,6 @@ export class TxSender {
     if (!this.isFinalization && isOffchain) {
       try {
         const signature = await this.onlyConfirm()
-
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
           this.onComplete(signature, confirmCallback)
@@ -237,6 +235,7 @@ export class TxSender {
         logError(Errors._814, err.message)
         this.onError(err, errorCallback)
       }
+
       return
     }
 
@@ -337,6 +336,7 @@ export const createTransaction = (
     sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
 
     // Start the creation
+    console.log('createTransaction', sender)
     sender.submitTx(confirmCallback, errorCallback)
   }
 }

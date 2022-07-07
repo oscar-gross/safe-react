@@ -15,7 +15,7 @@ import { getChainById, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { ProxyFactory } from 'src/types/contracts/proxy_factory.d'
 import { CompatibilityFallbackHandler } from 'src/types/contracts/compatibility_fallback_handler.d'
@@ -194,9 +194,9 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
   return masterCopyAddress
 }
 
-export const instantiateSafeContracts = async () => {
-  const web3 = getWeb3()
+export const instantiateSafeContracts = async (connectWallet: boolean) => {
   const chainId = _getChainId()
+  const web3 = connectWallet ? getWeb3() : getWeb3ReadOnly()
 
   // Create ProxyFactory Master Copy
   proxyFactoryMaster = getProxyFactoryContractInstance(web3, chainId)
@@ -222,7 +222,7 @@ export const getInstance = async (web3: Web3, chainId: ChainId, address: string)
 }
 
 export const getSafeMasterContract = () => {
-  instantiateSafeContracts()
+  instantiateSafeContracts(false)
   return safeMaster
 }
 
@@ -259,18 +259,7 @@ export const getSafeDeploymentTransaction = (
       ZERO_ADDRESS,
     )
     .encodeABI()
-  console.log(
-    'getSafeDeploymentTransaction',
-    safeAccounts,
-    numConfirmations,
-    ZERO_ADDRESS,
-    EMPTY_DATA,
-    fallbackHandler.options.address,
-    ZERO_ADDRESS,
-    0,
-    ZERO_ADDRESS,
-    safeCreationSalt,
-  )
+
   return proxyFactoryMaster.methods.createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
 }
 
@@ -281,14 +270,6 @@ export const estimateGasForDeployingSafe = async (
   safeCreationSalt: number,
 ) => {
   const proxyFactoryData = getSafeDeploymentTransaction(safeAccounts, numConfirmations, safeCreationSalt).encodeABI()
-  console.log(
-    'estimateGasForDeployingSafe',
-    userAccount,
-    safeAccounts,
-    numConfirmations,
-    safeCreationSalt,
-    proxyFactoryMaster,
-  )
 
   return calculateGasOf({
     data: proxyFactoryData,

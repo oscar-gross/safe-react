@@ -8,6 +8,5 @@ export const fetchSafeAppsList = async (): Promise<SafeAppData[]> => {
     return await getSafeApps(_getChainId(), {
       client_url: window.location.origin,
     })
-  console.log('getSafeApps')
   return []
 }

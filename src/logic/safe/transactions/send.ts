@@ -62,7 +62,6 @@ export const getExecutionTransaction = ({
     )
   } catch (err) {
     console.error(`Error while creating transaction: ${err}`)
-
     throw err
   }
 }

@@ -19,7 +19,6 @@ export const fetchSafeTxGasEstimation = async ({
   ...body
 }: FetchSafeTxGasEstimationProps): Promise<SafeTransactionEstimation> => {
   const chainId = _getChainId()
-  console.log('fetchSafeTxGasEstimation', body)
   if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
     return await postSafeGasEstimation(_getChainId(), checksumAddress(safeAddress), body)
   const web3 = getWeb3()
@@ -28,7 +27,8 @@ export const fetchSafeTxGasEstimation = async ({
 
   return {
     currentNonce: parseInt(nonce),
-    recommendedNonce: parseInt(nonce) + 1,
+    recommendedNonce: parseInt(nonce),
+    // recommendedNonce: 50,
     safeTxGas: '500000',
   }
 }

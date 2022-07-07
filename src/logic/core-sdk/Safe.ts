@@ -43,6 +43,13 @@ export interface AddOwnerTxParams {
   threshold?: number
 }
 
+export interface MethodEncode {
+  encodeAddOwnerWithThresholdData: 'encodeAddOwnerWithThresholdData'
+  encodeRemoveOwnerData: 'encodeRemoveOwnerData'
+  encodeSwapOwnerData: 'encodeSwapOwnerData'
+  encodeChangeThresholdData: 'encodeChangeThresholdData'
+}
+
 export interface RemoveOwnerTxParams {
   ownerAddress: string
   threshold?: number
@@ -426,6 +433,10 @@ class Safe {
       ...options,
     })
     return safeTransaction
+  }
+
+  async getSignerAddress() {
+    return await this.ethAdapter.getSignerAddress()
   }
 
   /**

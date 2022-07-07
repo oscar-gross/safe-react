@@ -76,7 +76,6 @@ const DecodedTransactions = ({
         }
 
         const decodedData = transaction.txDetails?.txData.dataDecoded || decodedDataParams
-
         return <DecodeTxs txs={[tx]} decodedData={decodedData as DecodedTxDetailType} key={transaction.id} />
       })}
     </div>

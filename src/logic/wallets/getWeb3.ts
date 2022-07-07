@@ -53,13 +53,8 @@ export const web3HttpProviderOptions = {
 const web3ReadOnly: Web3[] = []
 export const getWeb3ReadOnly = (chainId = _getChainId()): Web3 => {
   if (!web3ReadOnly[chainId]) {
-    web3ReadOnly[chainId] = new Web3(
-      process.env.NODE_ENV !== 'test'
-        ? new Web3.providers.HttpProvider(getRpcServiceUrl(), web3HttpProviderOptions)
-        : 'ws://localhost:8545',
-    )
+    web3ReadOnly[chainId] = new Web3(new Web3.providers.HttpProvider(getRpcServiceUrl(), web3HttpProviderOptions))
   }
-
   return web3ReadOnly[chainId]
 }
 
@@ -92,7 +87,6 @@ export const isSmartContract = async (account: string, chainId: ChainId): Promis
   let contractCode = ''
   try {
     contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
-    console.log('isSmartContract', account, contractCode)
   } catch (e) {
     console.log('e', e)
     // ignore
