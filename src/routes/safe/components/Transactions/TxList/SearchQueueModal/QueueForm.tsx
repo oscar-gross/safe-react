@@ -91,7 +91,7 @@ export const QueueForm = ({ handleState, onClose, onSubmit, values, methods, han
                     />
                   </Col>
                 </Row>
-                <Row align="center" className={classes.inputRow} margin="xl">
+                {/* <Row align="center" className={classes.inputRow} margin="xl">
                   <Col xs={8}>
                     <Field
                       label={<h4 style={{ padding: 0, margin: 0 }}>&nbsp;&nbsp; Owner who add the transaction*</h4>}
@@ -110,7 +110,7 @@ export const QueueForm = ({ handleState, onClose, onSubmit, values, methods, han
                       validate={composeValidators(required, validAddressBookName)}
                     />
                   </Col>
-                </Row>
+                </Row> */}
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>

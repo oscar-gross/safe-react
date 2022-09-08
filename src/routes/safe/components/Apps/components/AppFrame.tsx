@@ -196,8 +196,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getTxBySafeTxHash, async (msg) => {
       const { safeTxHash } = msg.data.params as GetTxBySafeTxHashParams
+      console.log('fetchSafeTransaction2')
 
       const tx = await fetchSafeTransaction(safeTxHash)
+      console.log('fetchSafeTransaction_2')
 
       return tx
     })

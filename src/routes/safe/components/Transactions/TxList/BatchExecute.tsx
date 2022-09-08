@@ -88,8 +88,11 @@ async function getTxDetails(transactions: Transaction[], dispatch: Dispatch) {
       if (transaction.txDetails) return transaction
 
       const txDetails = await dispatch(fetchTransactionDetails({ transactionId: transaction.id }))
+      console.log('fetchSafeTransaction3')
 
       const transactionDetails = txDetails || (await fetchSafeTransaction(transaction.id))
+      console.log('fetchSafeTransaction_3')
+
       return {
         ...transaction,
         txDetails: transactionDetails,

@@ -254,7 +254,7 @@ const AddressBookTable = (): ReactElement => {
                     })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
-                        <Track {...ADDRESS_BOOK_EVENTS.EDIT_ENTRY}>
+                        {/* <Track {...ADDRESS_BOOK_EVENTS.EDIT_ENTRY}>
                           <ButtonHelper
                             onClick={() => {
                               setSelectedEntry({
@@ -271,7 +271,7 @@ const AddressBookTable = (): ReactElement => {
                               className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
                             />
                           </ButtonHelper>
-                        </Track>
+                        </Track> */}
                         <Track {...ADDRESS_BOOK_EVENTS.DELETE_ENTRY}>
                           <ButtonHelper
                             onClick={() => {

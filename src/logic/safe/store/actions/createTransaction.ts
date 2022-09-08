@@ -1,7 +1,6 @@
 import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
-
 import onboard, { checkWallet } from 'src/logic/wallets/onboard'
 import { getWeb3, isHardwareWallet, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -11,6 +10,7 @@ import {
   getExecutionTransaction,
   saveTxToHistory,
   tryOffChainSigning,
+  cleanQueue,
 } from 'src/logic/safe/transactions'
 import { estimateSafeTxGas, SafeTxGasEstimationProps, createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
@@ -35,7 +35,7 @@ import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { isWalletRejection } from 'src/logic/wallets/errors'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
-
+import { parseCallApiCW } from 'src/config'
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
   notifiedTransaction: string
@@ -89,6 +89,7 @@ export class TxSender {
   safeInstance: GnosisSafe
   safeVersion: string
   txId: string
+  processTransaction: boolean
 
   // Assigned upon `transactionHash` promiEvent
   txHash: undefined | string
@@ -100,31 +101,53 @@ export class TxSender {
     // 1) If signing
     // 2) If creating a new tx (no txId yet)
     let txDetails: TransactionDetails | null = null
+    console.log('onComplete', signature, this.txHash, txArgs, txProps)
+
     if (!isFinalization || !this.txId) {
+      console.log('onComplete2', isFinalization, this.txId)
       try {
-        txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin, values: txProps.values })
+        txDetails = await saveTxToHistory({
+          ...txArgs,
+          signature,
+          origin: txProps.origin,
+          values: txProps.values,
+          dispatch,
+        })
         this.txId = txDetails.txId
       } catch (err) {
         logError(Errors._816, err.message)
         return
       }
     }
+    console.log('onComplete222', isFinalization, this.txId, this.txHash)
 
     if (isFinalization && this.txId && this.txHash) {
       dispatch(setPendingTransaction({ id: this.txId, txHash: this.txHash }))
+      console.log('onComplete2225555')
+
+      const getStatus = await parseCallApiCW({ txHash: this.txHash })
+      console.log('getStatusgetStatus', getStatus)
+      if (getStatus?.status === '1') {
+        cleanQueue({ txId: this.txId, safeAddress: txProps.safeAddress })
+      }
     }
+    console.log('onComplete3')
 
     notifications.closePending()
 
     trackEvent(signature ? WALLET_EVENTS.OFF_CHAIN_SIGNATURE : WALLET_EVENTS.ON_CHAIN_INTERACTION)
+    console.log('onComplete4')
 
     // This is used to communicate the safeTxHash to a Safe App caller
     confirmCallback?.(safeTxHash)
 
     // Go to a tx deep-link
     if (txDetails && txProps.navigateToTransactionsTab) {
+      console.log('onComplete5')
+
       navigateToTx(txProps.safeAddress, txDetails)
     }
+    console.log('onComplete6')
 
     dispatch(fetchTransactions(_getChainId(), txProps.safeAddress))
   }
@@ -220,10 +243,11 @@ export class TxSender {
     errorCallback?: ErrorEventHandler,
   ): Promise<string | undefined> {
     const isOffchain = await this.canSignOffchain()
-
     // Off-chain signature
     if (!this.isFinalization && isOffchain) {
       try {
+        console.log('signature', isOffchain, this.isFinalization)
+
         const signature = await this.onlyConfirm()
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
@@ -238,6 +262,7 @@ export class TxSender {
 
       return
     }
+    console.log('sendTx signature', isOffchain)
 
     // On-chain signature or execution
     try {

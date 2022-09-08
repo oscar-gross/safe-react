@@ -12,22 +12,22 @@ const cache = {}
 export const fetchSafeTransaction = async (txId: string): Promise<TransactionDetails> => {
   const chainId = _getChainId()
   const cacheKey = `${chainId}_${txId}`
-
-  const promise: Promise<TransactionDetails> =
-    cache[cacheKey] || (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
-      ? getTransactionDetails(chainId, txId)
-      : (async () => {
-          const transactions = localStorage.getItem(`loadTransaction_${chainId}`)
-            ? JSON.parse(localStorage.getItem(`loadTransaction_${chainId}`) as string)
-            : {}
-          return (await (transactions && transactions.lenght > 0))
-            ? transactions.find((t) => t.txId === txId)
-            : {
-                code: 1337,
-                message: '{"detail":"Not found."}',
-              }
-        })()
-
+  let promise: Promise<TransactionDetails>
+  if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009) {
+    promise = cache[cacheKey] || getTransactionDetails(chainId, txId)
+  } else {
+    promise = (async () => {
+      const transaction = JSON.parse(localStorage.getItem(`loadTransaction_${chainId}`) as string)
+      if (transaction) {
+        return transaction?.find((t) => t.txId === txId) ? await transaction.find((t) => t.txId === txId) : await {}
+      }
+      return {}
+    })()
+  }
+  // cache[cacheKey] || (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
+  //   ? getTransactionDetails(chainId, txId)
+  //   :
+  console.log('promise', promise)
   // Save the promise into cache
   cache[cacheKey] = promise
   // Clear cache when promise finishes

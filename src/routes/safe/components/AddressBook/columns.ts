@@ -21,15 +21,15 @@ type AddressBookColumn = {
 }
 
 export const generateColumns = (): List<AddressBookColumn> => {
-  const nameColumn = {
-    id: AB_NAME_ID,
-    order: false,
-    disablePadding: false,
-    label: 'Name',
-    width: 150,
-    custom: false,
-    align: 'left',
-  }
+  // const nameColumn = {
+  //   id: AB_NAME_ID,
+  //   order: false,
+  //   disablePadding: false,
+  //   label: 'Name',
+  //   width: 150,
+  //   custom: false,
+  //   align: 'left',
+  // }
 
   const addressColumn = {
     id: AB_ADDRESS_ID,
@@ -48,5 +48,5 @@ export const generateColumns = (): List<AddressBookColumn> => {
     custom: true,
   }
 
-  return List([nameColumn, addressColumn, actionsColumn])
+  return List([addressColumn, actionsColumn])
 }

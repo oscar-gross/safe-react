@@ -24,11 +24,18 @@ export const fetchSafeTxGasEstimation = async ({
   const web3 = getWeb3()
   const instance = await getInstance(web3, chainId, safeAddress)
   const nonce = await instance.methods.nonce().call()
+  const queueLoaded = localStorage?.getItem(`loadQueue_${chainId}_${safeAddress}`)
+  const majorNonce =
+    queueLoaded &&
+    JSON.parse(queueLoaded)
+      .map((a) => a?.transaction?.executionInfo?.nonce && a?.transaction?.executionInfo?.nonce)
+      .sort(function (a, b) {
+        return b - a
+      })[0]
 
   return {
     currentNonce: parseInt(nonce),
-    recommendedNonce: parseInt(nonce),
-    // recommendedNonce: 50,
+    recommendedNonce: majorNonce ? parseInt(majorNonce) + 1 : parseInt(nonce),
     safeTxGas: '500000',
   }
 }

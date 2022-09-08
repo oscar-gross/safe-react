@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { Dispatch } from 'redux'
 
 import Modal from 'src/components/Modal'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -15,12 +16,12 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { saveTxLocal } from 'src/logic/safe/transactions'
-
 export type ObjectSigs = {
   owner: string
   sig: string
 }
 type ValuesTypes = {
+  safeVersion: string
   ownerTransaction: string
   owners: Array<string>
   threshold: string
@@ -29,7 +30,6 @@ type ValuesTypes = {
   currentNonce: string
   nonceTransaction: string
   ownerAdded: string
-  currentOwner: string
   ownerRemoved: string
   method: string
   sigs: Array<ObjectSigs>
@@ -67,18 +67,20 @@ export const SearchQueueModal = ({ isOpen, onClose }: Props): React.ReactElement
   const safeVersion = useSelector(currentSafeCurrentVersion)
   const currentOwner = useSelector(userAccountSelector)
   const [activeScreen, setActiveScreen] = useState('selectTypeOwner')
+  const dispatch = useDispatch<Dispatch>()
 
   const [values, setValues] = useState<ValuesTypes>({
-    ownerTransaction: '',
+    safeVersion,
+    safeAddress: safeAddress,
+    ownerTransaction: currentOwner,
     owners: [],
-    threshold: '',
-    newThreshold: '',
-    safeTxHash: '',
-    currentNonce: '',
-    nonceTransaction: '',
-    currentOwner: '',
     ownerAdded: '',
     ownerRemoved: '',
+    safeTxHash: '',
+    threshold: '',
+    newThreshold: '',
+    currentNonce: '',
+    nonceTransaction: '',
     method: '',
     sigs: [
       {
@@ -90,24 +92,23 @@ export const SearchQueueModal = ({ isOpen, onClose }: Props): React.ReactElement
     status: '',
     type: '',
     labelMethod: '',
-    safeAddress: safeAddress,
     recipient: '',
     amount: '',
     token: '',
   })
 
-  const getDataSafe = useCallback(async () => {
+  const getDataSafe = async () => {
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
     const owners = await safeInstance.methods.getOwners().call()
     const threshold = await safeInstance.methods.getThreshold().call()
     const currentNonce = await safeInstance.methods.nonce().call()
-    setValues({ ...values, owners, currentNonce, threshold, currentOwner })
+    setValues({ ...values, owners, currentNonce, threshold })
     setActiveScreen('selectTypeOwner')
-  }, [currentOwner, safeAddress, safeVersion, values])
+  }
 
   useEffect(() => {
     getDataSafe()
-  }, [isOpen, getDataSafe])
+  }, [isOpen])
 
   const handleState = (value: string, param: string) => {
     setValues({ ...values, [param]: value })
@@ -128,7 +129,7 @@ export const SearchQueueModal = ({ isOpen, onClose }: Props): React.ReactElement
   }
 
   const signatureReview = async () => {
-    await saveTxLocal({ values })
+    await saveTxLocal({ values, dispatch })
     onClose()
   }
 

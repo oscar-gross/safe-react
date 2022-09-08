@@ -42,6 +42,7 @@ type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxStat
 export const processTransaction = (props: ProcessTransactionArgs): ProcessTransactionAction => {
   return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
     const sender = new TxSender()
+    sender.processTransaction = true
     console.log('processTransaction', sender, props)
     // Selectors
     const state = getState()
@@ -87,7 +88,6 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
         approveAndExecute ? props.preApprovingOwner : undefined,
       ),
     }
-
     sender.safeTxHash = tx.safeTxHash
     sender.submitTx()
   }

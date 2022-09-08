@@ -125,7 +125,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                 <Row>
                   <Paragraph>New owner</Paragraph>
                 </Row>
-                <Row margin="md">
+                {/* <Row margin="md">
                   <Col xs={8}>
                     <Field
                       component={TextField}
@@ -147,7 +147,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                       }}
                     </OnChange>
                   </Col>
-                </Row>
+                </Row> */}
                 <Row margin="md">
                   <Col xs={8}>
                     <AddressInput

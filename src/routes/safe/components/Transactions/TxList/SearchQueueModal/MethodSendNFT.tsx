@@ -104,7 +104,7 @@ export const MethodSendNFT = ({
                   cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
                   confirmButtonProps={{
                     type: 'submit',
-                    text: 'Nexttttt',
+                    text: 'Next',
                     testId: 'add-owner-next-btn',
                   }}
                 />

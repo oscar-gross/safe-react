@@ -6,7 +6,7 @@ import {
   RpcUri,
   GasPriceFixed,
 } from '@gnosis.pm/safe-react-gateway-sdk'
-
+import axios from 'axios'
 import {
   DEFAULT_CHAIN_ID,
   ETHERSCAN_API_KEY,
@@ -174,3 +174,16 @@ export const getContractABI = async (contractAddress: string) => {
     return undefined
   }
 }
+
+type ParseCallApi = {
+  txHash?: string
+  address?: string
+  token?: string
+}
+
+export const parseCallApiCW = async ({ txHash, address, token }: ParseCallApi) =>  await axios
+  .get(`https://explorer.${_getChainId() === '2009' ? 'mainnet' : 'testnet'}.cloudwalk.io/api?module=${txHash ? 'transaction' : address ? 'account' : 'token'
+    }&action=${txHash ? 'gettxinfo' : address ? 'tokenlist' : 'getTokenHolders'
+    }&${txHash ? 'txhash' : address ? 'address' : 'contractaddress'
+    }=${txHash ? txHash : address ? address : token
+    }`).then(({data}) => data)

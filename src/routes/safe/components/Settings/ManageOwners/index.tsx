@@ -118,11 +118,11 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   ))}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
-                      <Track {...SETTINGS_EVENTS.OWNERS.EDIT_OWNER}>
+                      {/* <Track {...SETTINGS_EVENTS.OWNERS.EDIT_OWNER}>
                         <ButtonHelper onClick={onShow('EditOwner', row)} dataTestId={RENAME_OWNER_BTN_TEST_ID}>
                           <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
                         </ButtonHelper>
-                      </Track>
+                      </Track> */}
                       {granted && (
                         <>
                           <Track {...SETTINGS_EVENTS.OWNERS.REPLACE_OWNER}>
@@ -160,7 +160,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   testId={ADD_OWNER_BTN_TEST_ID}
                   variant="contained"
                 >
-                  Add new owner
+                  Add new owners
                 </Button>
               </Track>
             </Col>

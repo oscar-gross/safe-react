@@ -46,7 +46,7 @@ function LoadSafeOwnersStep(): ReactElement {
 
             return (
               <OwnerContainer key={address} data-testid="owner-row">
-                <Col xs={4}>
+                {/* <Col xs={4}>
                   <FieldContainer
                     component={TextField}
                     initialValue={name}
@@ -57,7 +57,7 @@ function LoadSafeOwnersStep(): ReactElement {
                     validate={minMaxLength(0, 50)}
                     testId={`load-safe-owner-name-${index}`}
                   />
-                </Col>
+                </Col> */}
                 <Col xs={8}>
                   <OwnerAddressContainer>
                     <PrefixedEthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={getExplorerInfo(address)} />

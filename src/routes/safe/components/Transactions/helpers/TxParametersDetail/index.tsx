@@ -146,7 +146,6 @@ export const TxParametersDetail = ({
   if (parametersStatus === 'DISABLED') {
     return null
   }
-
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
       <Track {...MODALS_EVENTS.ADVANCED_PARAMS} label={isAccordionExpanded ? 'Close' : 'Open'}>

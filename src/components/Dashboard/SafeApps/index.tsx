@@ -104,7 +104,7 @@ const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
 
   return (
     <WidgetContainer>
-      <WidgetTitle>Safe Apps</WidgetTitle>
+      {/* <WidgetTitle>Safe Apps</WidgetTitle>
 
       <WidgetBody>
         <StyledGrid>
@@ -130,7 +130,7 @@ const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
             </Card>
           </StyledLink>
         </StyledGrid>
-      </WidgetBody>
+      </WidgetBody> */}
     </WidgetContainer>
   )
 }

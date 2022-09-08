@@ -59,7 +59,7 @@ export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.Reac
           return (
             <>
               <Block className={classes.container}>
-                <Row margin="md">
+                {/* <Row margin="md">
                   <Field
                     component={TextField}
                     initialValue={owner.name}
@@ -70,7 +70,7 @@ export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.Reac
                     type="text"
                     validate={composeValidators(required, validAddressBookName)}
                   />
-                </Row>
+                </Row> */}
                 <Row>
                   <Block justify="center">
                     <PrefixedEthHashInfo

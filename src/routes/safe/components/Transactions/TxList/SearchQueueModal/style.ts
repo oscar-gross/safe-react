@@ -36,7 +36,7 @@ export const useStyles = makeStyles(
       marginRight: sm,
     },
     buttonRow: {
-      padding: '60px',
+      padding: '80px 0px 0px 0px',
       left: 0,
       bottom: 0,
       boxSizing: 'border-box',

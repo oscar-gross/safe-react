@@ -35,7 +35,7 @@ export const MethodSwapOwner = ({
 
   useEffect(() => {
     handleState(values.threshold, 'newThreshold')
-  }, [handleState, values.threshold])
+  }, [])
 
   return (
     <>

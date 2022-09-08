@@ -2,6 +2,11 @@ import { ChainId } from 'src/config/chain.d'
 
 export const ADDRESS_BOOK_DEFAULT_NAME = 'UNKNOWN'
 
+export type AddressBookEntry2 = {
+  address: string // the contact address
+  chainId: ChainId // see https://chainid.network
+}
+
 export type AddressBookEntry = {
   address: string // the contact address
   name: string // human-readable name

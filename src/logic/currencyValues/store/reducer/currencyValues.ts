@@ -9,7 +9,7 @@ export type CurrencyValuesState = {
   availableCurrencies: string[]
 }
 
-const defaultSelectedCurrency = 'USD'
+const defaultSelectedCurrency = 'BRL'
 
 export const initialCurrencyState = {
   selectedCurrency: defaultSelectedCurrency,

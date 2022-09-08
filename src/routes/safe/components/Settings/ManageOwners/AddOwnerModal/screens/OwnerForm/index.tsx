@@ -94,9 +94,9 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
             <>
               <Block className={classes.formContainer}>
                 <Row margin="md">
-                  <Paragraph>Add a new owner to the active Safeeee</Paragraph>
+                  <Paragraph>Add a new owner to the active Safe</Paragraph>
                 </Row>
-                <Row margin="md">
+                {/* <Row margin="md">
                   <Col xs={8}>
                     <Field
                       component={TextField}
@@ -118,7 +118,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
                       }}
                     </OnChange>
                   </Col>
-                </Row>
+                </Row> */}
                 <Row margin="md">
                   <Col xs={8}>
                     <AddressInput

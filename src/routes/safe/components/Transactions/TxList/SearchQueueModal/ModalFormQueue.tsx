@@ -97,7 +97,7 @@ export const SearchTransactionQueue = ({ onClose, onSubmit, initialValues }): Re
                 <Row margin="md">
                   <Paragraph>Add a new owner to the active Safe</Paragraph>
                 </Row>
-                <Row margin="md">
+                {/* <Row margin="md">
                   <Col xs={8}>
                     <Field
                       component={TextField}
@@ -119,7 +119,7 @@ export const SearchTransactionQueue = ({ onClose, onSubmit, initialValues }): Re
                       }}
                     </OnChange>
                   </Col>
-                </Row>
+                </Row> */}
                 <Row margin="md">
                   <Col xs={8}>
                     <AddressInput

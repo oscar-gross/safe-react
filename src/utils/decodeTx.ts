@@ -3,6 +3,7 @@ import { getDecodedData, DecodedDataResponse } from '@gnosis.pm/safe-react-gatew
 import { _getChainId } from 'src/config'
 
 export const fetchTxDecoder = async (encodedData: string): Promise<DecodedDataResponse | null> => {
+  console.log('fetchTxDecoder o que estava faltando', encodedData)
   if (!encodedData?.length || encodedData === '0x') {
     return null
   }

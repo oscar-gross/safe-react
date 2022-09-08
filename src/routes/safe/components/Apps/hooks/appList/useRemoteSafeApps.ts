@@ -33,14 +33,14 @@ const useRemoteSafeApps = (): ReturnType => {
     const loadAppsList = async () => {
       setStatus(FETCH_STATUS.LOADING)
       try {
-        const result = await memoizedFetchSafeApps()
+        // const result = await memoizedFetchSafeApps()
 
-        if (result?.length) {
-          setRemoteSafeApps(result.map((app) => ({ ...app, fetchStatus: FETCH_STATUS.SUCCESS, id: String(app.id) })))
-          setStatus(FETCH_STATUS.SUCCESS)
-        } else {
-          throw new Error('Empty apps array 🤬')
-        }
+        // if (result?.length) {
+        // setRemoteSafeApps(result.map((app) => ({ ...app, fetchStatus: FETCH_STATUS.SUCCESS, id: String(app.id) })))
+        setStatus(FETCH_STATUS.SUCCESS)
+        // } else {
+        //   throw new Error('Empty apps array 🤬')
+        // }
       } catch (e) {
         setStatus(FETCH_STATUS.ERROR)
         logError(Errors._902, e.message)
