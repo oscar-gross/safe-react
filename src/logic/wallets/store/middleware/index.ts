@@ -70,7 +70,7 @@ const providerMiddleware =
     // Instantiate web3/contract
     if (wallet.provider) {
       setWeb3(wallet.provider)
-      instantiateSafeContracts()
+      instantiateSafeContracts(true)
     }
 
     // Only track when store/UI is in sync with onboard

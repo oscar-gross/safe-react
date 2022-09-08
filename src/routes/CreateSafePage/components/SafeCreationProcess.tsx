@@ -127,7 +127,6 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
       ethGasPriceInGWei: gasPrice,
       ethMaxPrioFeeInGWei: gasMaxPrioFee.toString(),
     })
-    console.log('deploymentTx', deploymentTx)
     deploymentTx
       .send(sendParams)
       .once('transactionHash', (txHash) => {
@@ -215,7 +214,6 @@ function SafeCreationProcess(): ReactElement {
 
   const onSafeCreated = async (safeAddress: string): Promise<void> => {
     console.log('onSafeCreated', safeAddress)
-
     const createSafeFormValues = loadSavedDataOrLeave()
 
     const defaultSafeValue = createSafeFormValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]

@@ -5,14 +5,13 @@ import { AvailableCurrenciesPayload } from 'src/logic/currencyValues/store/reduc
 import { setAvailableCurrencies } from 'src/logic/currencyValues/store/actions/setAvailableCurrencies'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getFiatCurrencies } from '@gnosis.pm/safe-react-gateway-sdk'
-
+import { _getChainId } from 'src/config'
 export const updateAvailableCurrencies =
   () =>
   async (dispatch: ThunkDispatch<AppReduxState, undefined, Action<AvailableCurrenciesPayload>>): Promise<void> => {
+    const chainId = parseInt(_getChainId())
     try {
-      const availableCurrencies = await getFiatCurrencies()
-      availableCurrencies.push('BRLC')
-      availableCurrencies.push('CWN')
+      const availableCurrencies = chainId !== 2008 && chainId !== 2009 ? await getFiatCurrencies() : ['BRL']
       dispatch(setAvailableCurrencies({ availableCurrencies }))
     } catch (err) {
       logError(Errors._607, err.message)

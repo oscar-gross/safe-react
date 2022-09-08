@@ -54,6 +54,12 @@ export const sendReplaceOwner = async (
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       delayExecution,
+      values: {
+        ownerRemoved: ownerAddressToRemove,
+        ownerAdded: newOwner.address,
+        method: 'swapOwner',
+        type: 'SWAP_OWNER',
+      },
     }),
   )
 }

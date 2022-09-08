@@ -137,7 +137,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
             const hasOwnerAddressError = formErrors[addressFieldName]
             const ownerAddress = createSafeFormValues[addressFieldName]
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
-            const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
+            // const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
 
             const isRepeated = (value: string) => {
               const prevOwners = owners.filter((_: typeof owners[number], index: number) => index !== i)
@@ -149,7 +149,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 
             return (
               <Fragment key={addressFieldName}>
-                <Col xs={3}>
+                {/* <Col xs={3}>
                   <OwnerNameField
                     component={TextField}
                     name={nameFieldName}
@@ -159,8 +159,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                     validate={minMaxLength(0, 50)}
                     testId={nameFieldName}
                   />
-                </Col>
-                <Col xs={7}>
+                </Col> */}
+                <Col xs={7} style={{ marginTop: '20px' }}>
                   <AddressInput
                     fieldMutator={async (address) => {
                       createSafeForm.change(addressFieldName, address)

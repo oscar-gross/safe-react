@@ -238,7 +238,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         moduleAddress,
         advancedOptionsTxParameters,
       )
-
       dispatch(createTransaction({ ...spendingLimitTxData, delayExecution }))
 
       trackEvent({

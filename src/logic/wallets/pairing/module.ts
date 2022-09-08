@@ -39,7 +39,6 @@ const getClientMeta = (): IClientMeta => {
 const getPairingModule = (chainId: ChainId): WalletModule => {
   const STORAGE_ID = 'SAFE__pairingProvider'
   const clientMeta = getClientMeta()
-  console.log('WalletConnectProvider')
   return {
     name: PAIRING_MODULE_NAME,
     wallet: async ({ resetWalletState }) => {

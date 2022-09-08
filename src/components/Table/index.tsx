@@ -68,14 +68,14 @@ class GnoTable extends React.Component<any, any> {
 
   componentDidMount() {
     const { columns, defaultOrderBy } = this.props
-
-    if (defaultOrderBy && columns) {
-      const defaultOrderCol = columns.find(({ id }) => id === defaultOrderBy)
-
-      if (defaultOrderCol.order) {
-        this.setState({
-          orderProp: true,
-        })
+    if (defaultOrderBy !== 'name') {
+      if (defaultOrderBy && columns) {
+        const defaultOrderCol = columns.find(({ id }) => id === defaultOrderBy)
+        if (defaultOrderCol.order) {
+          this.setState({
+            orderProp: true,
+          })
+        }
       }
     }
   }

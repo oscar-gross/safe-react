@@ -124,11 +124,11 @@ const Sidebar = ({
       ) : null}
 
       <HelpContainer>
-        {debugToggle}
+        {/* {debugToggle} */}
 
         <StyledDivider />
 
-        <HelpList>
+        {/* <HelpList>
           {!isDesktop && BEAMER_ID && (
             <Track {...OVERVIEW_EVENTS.WHATS_NEW}>
               <StyledListItem id="whats-new-button" button onClick={handleClick}>
@@ -144,7 +144,7 @@ const Sidebar = ({
               <StyledListItemText>Help Center</StyledListItemText>
             </HelpCenterLink>
           </Track>
-        </HelpList>
+        </HelpList> */}
       </HelpContainer>
     </>
   )

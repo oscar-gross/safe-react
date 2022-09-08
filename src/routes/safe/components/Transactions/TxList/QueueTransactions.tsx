@@ -12,9 +12,13 @@ import { BatchExecute } from 'src/routes/safe/components/Transactions/TxList/Bat
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import { BatchExecuteHoverProvider } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import { useSelector } from 'react-redux'
+import { ButtonOpenModalSearch } from './QueueTxList'
 
 export const QueueTransactions = (): ReactElement => {
   const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
+  const granted = useSelector(grantedSelector)
 
   const queuedTxCount = useMemo(
     () => (transactions ? transactions.next.count + transactions.queue.count : 0),
@@ -41,10 +45,13 @@ export const QueueTransactions = (): ReactElement => {
   // added the `transaction` verification to prevent `Object is possibly 'undefined'` error
   if (count === 0 || !transactions) {
     return (
-      <NoTransactions>
-        <Img alt="No Transactions yet" src={NoTransactionsImage} />
-        <Title size="xs">Queued transactions will appear here </Title>
-      </NoTransactions>
+      <>
+        {granted && <ButtonOpenModalSearch />}
+        <NoTransactions>
+          <Img alt="No Transactions yet" src={NoTransactionsImage} />
+          <Title size="xs">Queued transactions will appear here </Title>
+        </NoTransactions>
+      </>
     )
   }
 
@@ -52,6 +59,7 @@ export const QueueTransactions = (): ReactElement => {
     <BatchExecuteHoverProvider>
       <BatchExecute />
       <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+        {granted && <ButtonOpenModalSearch />}
         {/* Next list */}
         <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
           {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}

@@ -18,7 +18,16 @@ type DecodeInfoProps = {
 const decodeInfo = ({ paramsHash, params }: DecodeInfoProps): DataDecoded['parameters'] => {
   const web3 = getWeb3ReadOnly()
   const decodedParameters = web3.eth.abi.decodeParameters(Object.values(params), paramsHash)
-
+  console.log(
+    'decodeInfo',
+    paramsHash,
+    params,
+    Object.keys(params).map((name, index) => ({
+      name,
+      type: params[name],
+      value: decodedParameters[index],
+    })),
+  )
   return Object.keys(params).map((name, index) => ({
     name,
     type: params[name],

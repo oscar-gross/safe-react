@@ -4,7 +4,7 @@ import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'rea
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, AddressBookEntry2 } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
@@ -154,7 +154,7 @@ const BaseAddressBookInput = ({
   const inputStyles = useTextFieldInputStyle()
 
   return (
-    <Autocomplete<AddressBookEntry, false, false, true>
+    <Autocomplete<AddressBookEntry2, false, false, true>
       closeIcon={null}
       openOnFocus={false}
       filterOptions={filterAddressEntries}
@@ -177,7 +177,7 @@ const BaseAddressBookInput = ({
         />
       )}
       getOptionLabel={({ address }) => address}
-      renderOption={({ address, name }) => <PrefixedEthHashInfo hash={address} name={name} showAvatar />}
+      renderOption={({ address }) => <PrefixedEthHashInfo hash={address} showAvatar />}
       role="listbox"
       style={{ display: 'flex', flexGrow: 1 }}
     />
@@ -187,7 +187,6 @@ const BaseAddressBookInput = ({
 export const AddressBookInput = (props: AddressBookProps): ReactElement => {
   const addressBookEntries = useSelector(currentNetworkAddressBook)
   const [validationText, setValidationText] = useState<string>('')
-
   useEffect(() => {
     if (props.errorMsg) {
       setValidationText(props.errorMsg)

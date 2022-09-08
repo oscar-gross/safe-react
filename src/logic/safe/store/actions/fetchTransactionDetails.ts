@@ -36,7 +36,6 @@ export const fetchTransactionDetails =
 
     try {
       const transactionDetails = await fetchSafeTransaction(transactionId)
-
       dispatch(updateTransactionDetails({ chainId, transactionId, safeAddress, value: transactionDetails }))
       return transactionDetails
     } catch (error) {

@@ -13,9 +13,9 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const safeAppsEnabled = hasFeature(FEATURES.SAFE_APPS)
+  const safeAppsEnabled = false // hasFeature(FEATURES.SAFE_APPS)
   const isCollectiblesEnabled = hasFeature(FEATURES.ERC721)
-  const isSpendingLimitEnabled = hasFeature(FEATURES.SPENDING_LIMIT)
+  const isSpendingLimitEnabled = false // hasFeature(FEATURES.SPENDING_LIMIT)
   const { needsUpdate } = useSelector(currentSafeWithNames)
   const { shortName, safeAddress } = useSafeAddress()
   const granted = useSelector(grantedSelector)

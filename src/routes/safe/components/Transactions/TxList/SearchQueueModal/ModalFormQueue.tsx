@@ -27,7 +27,7 @@ import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/sele
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { isValidAddress } from 'src/utils/isValidAddress'
 
-import { OwnerValues } from '../..'
+// import { OwnerValues } from '../..'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
@@ -50,13 +50,13 @@ const formMutators: Record<
 
 const useStyles = makeStyles(styles)
 
-type OwnerFormProps = {
-  onClose: () => void
-  onSubmit: (values) => void
-  initialValues?: OwnerValues
-}
+// type OwnerFormProps = {
+//   onClose: () => void
+//   onSubmit: (values) => void
+//   initialValues?: OwnerValues
+// }
 
-export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps): React.ReactElement => {
+export const SearchTransactionQueue = ({ onClose, onSubmit, initialValues }): React.ReactElement => {
   const classes = useStyles()
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -65,9 +65,10 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
   const { address: safeAddress = '', owners = [] } = useSelector(currentSafe)
   const ownerDoesntExist = uniqueAddress(owners)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
+
   return (
     <>
-      <ModalHeader onClose={onClose} title="Add new owner" subTitle={getStepTitle(1, 3)} />
+      <ModalHeader onClose={onClose} title="Propsss" subTitle={getStepTitle(1, 3)} />
       <Hairline />
       <GnoForm
         formMutators={formMutators}

@@ -1,11 +1,16 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { Fragment, ReactElement, useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
-
+import { Button, Tooltip } from '@gnosis.pm/safe-react-components'
+import Row from 'src/components/layout/Row'
+import { useStyles } from './SearchQueueModal/style'
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { sameString } from 'src/utils/strings'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
-
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import styled from 'styled-components'
+import { md, sm } from 'src/theme/variables'
 import {
   DisclaimerContainer,
   GroupedTransactions,
@@ -21,6 +26,8 @@ import { TxQueueRow } from './TxQueueRow'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxActionProvider } from './TxActionProvider'
 import { ActionModal } from './ActionModal'
+import { SearchQueueModal } from './SearchQueueModal'
+import { AddSigModal } from './modals/AddSigModal'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
@@ -60,12 +67,13 @@ type QueueTransactionProps = {
 }
 
 const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
+  const granted = useSelector(grantedSelector)
+
   const [nrChildrenExpanded, setNrChildrenExpanded] = useState(0)
 
   const handleChildExpand = (expand: number) => {
     setNrChildrenExpanded((val) => val + expand)
   }
-
   if (transactions.length === 1) {
     return <TxQueueRow transaction={transactions[0]} />
   }
@@ -94,7 +102,6 @@ type QueueTxListProps = {
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const nonce = useSelector(currentSafeNonce)
-
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
   if (transactions.length) {
     const [, lastTransactionsGroup] = transactions[transactions.length - 1]
@@ -124,3 +131,61 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
     </TxActionProvider>
   )
 }
+
+export const ButtonOpenModalSearch = (): ReactElement => {
+  const classes = useStyles()
+  const [modalsStatus, setModalStatus] = useState(false)
+  return (
+    <>
+      <Row align="end" className={classes.buttonRow}>
+        <ButtonWrapper>
+          <Tooltip title={'Search pending transactions'} placement="top">
+            <div>
+              <Button size="md" color="primary" centerRipple onClick={() => setModalStatus(true)} className="primary">
+                {'Search pending transactions'}
+              </Button>
+            </div>
+          </Tooltip>
+        </ButtonWrapper>
+      </Row>
+      <SearchQueueModal isOpen={modalsStatus} onClose={() => setModalStatus(false)} />
+    </>
+  )
+}
+
+export const ButtonOpenModalAddSigs = ({ txDetails }): ReactElement => {
+  const classes = useStyles()
+  const currentNonce = useSelector(currentSafeNonce)
+  const currentOwner = useSelector(userAccountSelector)
+  const [modalsStatus, setModalStatus] = useState(false)
+
+  return (
+    <>
+      <Row align="end" className={classes.buttonRow} grow>
+        <ButtonWrapper>
+          <Tooltip title={'Add/Change Sigs'} placement="top">
+            <div>
+              <Button size="md" color="primary" centerRipple onClick={() => setModalStatus(true)} className="primary">
+                {'Update Sigs'}
+              </Button>
+            </div>
+          </Tooltip>
+        </ButtonWrapper>
+      </Row>
+      <AddSigModal
+        currentOwner={currentOwner}
+        currentNonce={currentNonce}
+        isOpen={modalsStatus}
+        txDetails={txDetails}
+        onClose={() => setModalStatus(false)}
+      />
+    </>
+  )
+}
+const ButtonWrapper = styled.span`
+  align-self: flex-end;
+  margin-right: ${sm};
+  margin-top: -51px;
+  margin-bottom: ${md};
+  z-index: 0;
+`

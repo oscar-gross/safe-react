@@ -17,16 +17,16 @@ export const getOwnerData = (owners: AddressBookState): OwnerData[] => {
 }
 
 export const generateColumns = (): List<TableColumn> => {
-  const nameColumn: TableColumn = {
-    id: OWNERS_TABLE_NAME_ID,
-    order: false,
-    formatTypeSort: (value: string) => value.toLowerCase(),
-    disablePadding: false,
-    label: 'Name',
-    width: 150,
-    custom: false,
-    align: 'left',
-  }
+  // const nameColumn: TableColumn = {
+  //   id: OWNERS_TABLE_NAME_ID,
+  //   order: false,
+  //   formatTypeSort: (value: string) => value.toLowerCase(),
+  //   disablePadding: false,
+  //   label: 'Name',
+  //   width: 150,
+  //   custom: false,
+  //   align: 'left',
+  // }
 
   const addressColumn: TableColumn = {
     id: OWNERS_TABLE_ADDRESS_ID,
@@ -45,5 +45,5 @@ export const generateColumns = (): List<TableColumn> => {
     custom: true,
   }
 
-  return List([nameColumn, addressColumn, actionsColumn])
+  return List([addressColumn, actionsColumn])
 }

@@ -36,7 +36,7 @@ export const DeleteEntryModal = ({
               <Text size="xl">
                 This action will delete{' '}
                 <Text size="xl" strong as="span">
-                  {entryToDelete.entry.name}
+                  {entryToDelete.entry.address}
                 </Text>{' '}
                 from the address book.
               </Text>

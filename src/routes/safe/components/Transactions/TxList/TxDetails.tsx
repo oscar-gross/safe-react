@@ -2,7 +2,7 @@ import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
 import { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
-
+import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
   ExpandedTxDetails,
   isCustomTxInfo,
@@ -30,7 +30,7 @@ import TxModuleInfo from './TxModuleInfo'
 import Track from 'src/components/Track'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import TxShareButton from './TxShareButton'
-
+import { ButtonOpenModalAddSigs } from './QueueTxList'
 const NormalBreakingText = styled(Text)`
   line-break: normal;
   word-break: normal;
@@ -100,7 +100,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const currentUser = useSelector(userAccountSelector)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
   const shouldShowStepper = data?.detailedExecutionInfo && isMultiSigExecutionDetails(data.detailedExecutionInfo)
-
+  const granted = useSelector(grantedSelector)
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
     if (!data || !isModuleExecutionInfo(data.detailedExecutionInfo)) {
@@ -192,6 +192,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
               'will-be-replaced': willBeReplaced,
             })}
           >
+            {granted && <ButtonOpenModalAddSigs txDetails={data} />}
             <TxOwners txDetails={data} isPending={isPending} />
           </div>
           {!isPending && !data.executedAt && txLocation !== 'history' && !!currentUser && (

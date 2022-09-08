@@ -79,6 +79,11 @@ export const ChangeThresholdModal = ({
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
         delayExecution,
+        values: {
+          newThreshold: String(editedThreshold),
+          method: 'changeThreshold',
+          type: 'CHANGE_THRESHOLD',
+        },
       }),
     )
 

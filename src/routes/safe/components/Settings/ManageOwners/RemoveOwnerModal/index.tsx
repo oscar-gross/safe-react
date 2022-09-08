@@ -40,7 +40,6 @@ export const sendRemoveOwner = async (
     { safeTxGas: 0 },
   )
   const txData = safeTx.data.data
-
   dispatch(
     createTransaction({
       safeAddress,
@@ -52,6 +51,12 @@ export const sendRemoveOwner = async (
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       delayExecution,
+      values: {
+        ownerRemoved: ownerAddressToRemove,
+        newThreshold: values.threshold,
+        method: 'removeOwner',
+        type: 'REMOVE_OWNER',
+      },
     }),
   )
 
