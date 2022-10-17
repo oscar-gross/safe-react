@@ -27,7 +27,6 @@ export const fetchSafeTransaction = async (txId: string): Promise<TransactionDet
   // cache[cacheKey] || (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
   //   ? getTransactionDetails(chainId, txId)
   //   :
-  console.log('promise', promise)
   // Save the promise into cache
   cache[cacheKey] = promise
   // Clear cache when promise finishes

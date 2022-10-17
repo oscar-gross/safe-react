@@ -23,7 +23,6 @@ export const loadPagedHistoryTransactions = async (
   if (!historyPointers[chainId][safeAddress]?.next) {
     throw new CodedException(Errors._608)
   }
-  console.log('loadPagedHistoryTransactions')
 
   try {
     let res
@@ -46,7 +45,6 @@ export const loadPagedHistoryTransactions = async (
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
   const chainId = _getChainId()
-  console.log('loadHistoryTransactions')
   let res
   try {
     // https://safe-client.gnosis.io/v1/chains/4/safes/0x351c79Ee22710933A3c8229B5A42F8423A2083B3/transactions/history
@@ -122,7 +120,6 @@ export const loadPagedQueuedTransactions = async (
   if (!queuedPointers[safeAddress]?.next) {
     throw new CodedException(Errors._608)
   }
-  console.log('loadPagedQueuedTransactions', queuedPointers)
   try {
     let res
     if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
@@ -143,7 +140,6 @@ export const loadPagedQueuedTransactions = async (
     }
     const { results, next, previous } = res
     queuedPointers[chainId][safeAddress] = { next, previous }
-    console.log('loadPagedQueuedTransactions2', queuedPointers)
 
     return { values: results, next: queuedPointers[chainId][safeAddress].next }
   } catch (e) {
@@ -154,8 +150,6 @@ export const loadPagedQueuedTransactions = async (
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
   const chainId = _getChainId()
   let res
-  console.log('loadQueuedTransactions')
-
   try {
     if (parseInt(chainId) !== 2008 && parseInt(chainId) !== 2009)
       res = await getTransactionQueue(chainId, checksumAddress(safeAddress))
@@ -182,7 +176,6 @@ export const loadQueuedTransactions = async (safeAddress: string): Promise<Queue
     if (!queuedPointers[chainId][safeAddress] || queuedPointers[chainId][safeAddress].next === null) {
       queuedPointers[chainId][safeAddress] = { next, previous }
     }
-    console.log('loadQueuedTransactions', queuedPointers, results)
 
     return results as TransactionListItem[]
   } catch (e) {

@@ -33,7 +33,6 @@ export const fetchTokenCurrenciesBalances = async ({
   }
   // https://explorer.testnet.cloudwalk.io/api?module=account&action=tokenlist&address=0x0d54bB74Ab05301f7D0967341E8d430Be09152c4
   const { result } = await parseCallApiCW({ address })
-  console.log('ddddddddddd', result)
 
   const items: Array<any> = []
 

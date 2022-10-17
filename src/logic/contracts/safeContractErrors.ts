@@ -11,7 +11,6 @@ export const decodeMessage = (message: string): string | null => {
   const code = CONTRACT_ERROR_CODES.find((code) => {
     return message.toUpperCase().includes(code.toUpperCase())
   })
-  console.log('decodeMessage', message, code ? `${code}: ${CONTRACT_ERRORS[code]}` : null)
   return code ? `${code}: ${CONTRACT_ERRORS[code]}` : null
 }
 

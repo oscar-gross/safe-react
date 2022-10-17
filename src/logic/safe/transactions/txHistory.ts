@@ -108,7 +108,6 @@ export const saveTxToHistory = async ({
     if (queueStored)
       txDetails = await processTransactionQueue({ queueStored, sender, signature, chainId, dispatch, txHash: null })
     else {
-      console.log('createTransaction inside SaveTX')
       const safeVersion = await getCurrentSafeVersion(safeInstance)
       const threshold = await safeInstance.methods.getThreshold().call()
       const owners = await safeInstance.methods.getOwners().call()
@@ -128,7 +127,6 @@ export const saveTxToHistory = async ({
               .find((trueSig) => trueSig)
           : ''
       }
-      console.log('saveTxToHistory', safeAddress, body.safeTxHash)
 
       const sigs: Array<Record<string, unknown>> = []
       owners.map((owner) => {
@@ -160,11 +158,9 @@ export const saveTxToHistory = async ({
         amount: values?.valueInWei,
         token: 'NATIVE_COIN',
       }
-      console.log('saveTxToHistoryValue', val)
 
       txDetails = await saveTxLocal({ values: val, dispatch })
     }
-    console.log('saveTxToHistoryEnd', txDetails)
   }
   return txDetails
 }
@@ -172,14 +168,12 @@ export const saveTxToHistory = async ({
 export const saveTxLocal = async ({ values, dispatch }): Promise<ReactElement> => {
   const currentOwner = values.ownerTransaction
   const chainId = _getChainId()
-  console.log('saveTxLocal', values)
   const sdk = await getSafeSDK(currentOwner, values.safeAddress, values.safeVersion)
   const parameters: Array<Record<string, unknown>> = []
   let data
   const settingsInfo = { type: values.type }
   const { confirmations, missingSigners, signers } = sigsInfo(values.sigs)
 
-  console.log('saveTxLocal1', missingSigners, signers, confirmations)
 
   const executionInfo = {
     type: 'MULTISIG',
@@ -188,7 +182,6 @@ export const saveTxLocal = async ({ values, dispatch }): Promise<ReactElement> =
     confirmationsSubmitted: values.sigs.filter((sig) => sig.sig).length,
     missingSigners,
   }
-  console.log('saveTxLocal11', executionInfo)
 
   if (values.ownerRemoved && values.ownerAdded) {
     data = await sdk.ownerManager.encodeSwapOwnerData(values.ownerRemoved, values.ownerAdded)
@@ -255,10 +248,7 @@ export const saveTxLocal = async ({ values, dispatch }): Promise<ReactElement> =
     Object.assign(settingsInfo, { owner: { value: values.ownerRemoved }, threshold: parseInt(values.newThreshold) })
   }
 
-  console.log('saveTxLocal111', data, parameters, settingsInfo)
   const sigs = getPreValidatedSignatures(currentOwner)
-  console.log('saveTxLocal2', sigs)
-
   const safeTxHash = await generateSafeTxHash(values.safeAddress, values.safeVersion, {
     baseGas: '0',
     data,
@@ -274,7 +264,6 @@ export const saveTxLocal = async ({ values, dispatch }): Promise<ReactElement> =
     to: values.safeAddress,
     valueInWei: '0',
   })
-  console.log('saveTxLocal3', safeTxHash)
 
   const transaction = {
     safeAddress: values.safeAddress,
@@ -339,7 +328,6 @@ export const saveTxLocal = async ({ values, dispatch }): Promise<ReactElement> =
     },
     conflictType: 'None',
   }
-  console.log('antesauxSetLocal', transaction, queue, chainId)
   await auxSetLocal({ transaction, queue, chainId })
   dispatch(fetchTransactions(chainId, values.safeAddress))
 
@@ -397,8 +385,6 @@ export const getHistoryParsed = async ({ txHash }) => {
 
 export const filterTxHistory = async ({ address }) => {
   const txInfo = await parseCallApiCW({ address })
-  console.log('fffffffffff', txInfo)
-
   // const txInfo = await axios.get(`https://explorer.testnet.cloudwalk.io/api?module=account&action=txlist&address=${address}`)
   const txs = txInfo?.result && txInfo?.result.tx
   const arr: any = []
@@ -536,7 +522,6 @@ export const updateSigsQueue = async (values, txDetails, dispatch) => {
       },
     },
   }
-  console.log('updateSigsQueue', queueStored, transaction, queue)
   await auxSetLocal({ transaction, queue, chainId })
   dispatch(fetchTransactions(chainId, txDetails.safeAddress))
 }
@@ -554,7 +539,6 @@ export const cleanQueue = async ({ txId, safeAddress }) => {
     chainId,
     returnOthers: true,
   })
-  console.log('11111111111111', queueLocal, transactionLocal)
   localStorage.setItem(
     `loadTransaction_${chainId}`,
     JSON.stringify(transactionLocal && transactionLocal?.others ? transactionLocal.others : []) as string,

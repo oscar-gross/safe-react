@@ -101,10 +101,8 @@ export class TxSender {
     // 1) If signing
     // 2) If creating a new tx (no txId yet)
     let txDetails: TransactionDetails | null = null
-    console.log('onComplete', signature, this.txHash, txArgs, txProps)
 
     if (!isFinalization || !this.txId) {
-      console.log('onComplete2', isFinalization, this.txId)
       try {
         txDetails = await saveTxToHistory({
           ...txArgs,
@@ -119,35 +117,28 @@ export class TxSender {
         return
       }
     }
-    console.log('onComplete222', isFinalization, this.txId, this.txHash)
 
     if (isFinalization && this.txId && this.txHash) {
       dispatch(setPendingTransaction({ id: this.txId, txHash: this.txHash }))
-      console.log('onComplete2225555')
 
       const getStatus = await parseCallApiCW({ txHash: this.txHash })
-      console.log('getStatusgetStatus', getStatus)
       if (getStatus?.status === '1') {
         cleanQueue({ txId: this.txId, safeAddress: txProps.safeAddress })
       }
     }
-    console.log('onComplete3')
 
     notifications.closePending()
 
     trackEvent(signature ? WALLET_EVENTS.OFF_CHAIN_SIGNATURE : WALLET_EVENTS.ON_CHAIN_INTERACTION)
-    console.log('onComplete4')
 
     // This is used to communicate the safeTxHash to a Safe App caller
     confirmCallback?.(safeTxHash)
 
     // Go to a tx deep-link
     if (txDetails && txProps.navigateToTransactionsTab) {
-      console.log('onComplete5')
 
       navigateToTx(txProps.safeAddress, txDetails)
     }
-    console.log('onComplete6')
 
     dispatch(fetchTransactions(_getChainId(), txProps.safeAddress))
   }
@@ -246,7 +237,6 @@ export class TxSender {
     // Off-chain signature
     if (!this.isFinalization && isOffchain) {
       try {
-        console.log('signature', isOffchain, this.isFinalization)
 
         const signature = await this.onlyConfirm()
         // WC + Safe receives "NaN" as a string instead of a sig
@@ -262,7 +252,6 @@ export class TxSender {
 
       return
     }
-    console.log('sendTx signature', isOffchain)
 
     // On-chain signature or execution
     try {
@@ -361,7 +350,6 @@ export const createTransaction = (
     sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
 
     // Start the creation
-    console.log('createTransaction', sender)
     sender.submitTx(confirmCallback, errorCallback)
   }
 }

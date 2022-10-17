@@ -27,10 +27,7 @@ export const setPendingTransaction = (details: { id: string; txHash: string }) =
       ...details,
       block,
     }
-    console.log('setPendingTransaction', pendingTransaction)
 
     dispatch(addPendingTransaction(pendingTransaction))
-
-    console.log('setPendingTransaction22')
   }
 }

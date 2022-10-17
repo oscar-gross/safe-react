@@ -36,7 +36,6 @@ export const SignatureForm = ({ handleState, onClose, onSubmit, values, onClickB
   }
 
   useEffect(() => {
-    console.log(values)
     firstLoad()
   }, [])
 

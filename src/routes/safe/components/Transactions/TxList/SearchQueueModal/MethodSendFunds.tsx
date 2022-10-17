@@ -51,7 +51,6 @@ export const MethodSendFunds = ({ props: { onClose, onSubmit, values } }): React
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
   const nativeCurrency = getNativeCurrency()
-  tokens.map((a) => console.log('ffffffff', a.address, a.symbol, a.name))
 
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: values.recipient || '', name: '' }

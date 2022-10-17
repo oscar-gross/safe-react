@@ -51,7 +51,6 @@ export const fetchMasterCopies = async (): Promise<MasterCopy[] | undefined> => 
         version: '1.1.1',
       },
     ]
-    console.log('getMasterCopies', res)
 
     return res.map(extractMasterCopyInfo)
   } catch (error) {
